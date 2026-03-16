@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Apex Duo Challenge</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
+body{
+background:#111;
+color:white;
+font-family:Arial;
+text-align:center;
+margin-top:80px;
+}
+
+button{
+font-size:28px;
+padding:18px 40px;
+cursor:pointer;
+}
+
+.result{
+margin-top:50px;
+font-size:22px;
+}
+
+.name{
+font-size:26px;
+font-weight:bold;
+margin-top:30px;
+}
+
+.status{
+margin-top:20px;
+color:#aaa;
+}
+
+.error{
+color:red;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>Apex Duo Challenge</h1>
+
+<button id="rollBtn">ROLL</button>
+
+<div class="status" id="status">Connecting...</div>
+
+<div class="result" id="result"></div>
+
+<script>
+
+const PROJECT_URL = "https://sfareqxrytcwfbbtazaf.supabase.co";
+const PUBLISHABLE_KEY = "sb_publishable_h9jnpKtpdETR23obQCPEjg_fE_Z3eo0";
+
+const { createClient } = supabase;
+
+const supabaseClient = createClient(
+PROJECT_URL,
+PUBLISHABLE_KEY
+);
+
+const legends = [
+"Bloodhound","Gibraltar","Lifeline","Pathfinder","Wraith","Bangalore",
+"Caustic","Mirage","Octane","Wattson","Crypto","Revenant","Loba",
+"Rampart","Horizon","Fuse","Valkyrie","Seer","Ash","Mad Maggie",
+"Newcastle","Vantage","Catalyst","Ballistic","Conduit","Alter"
+];
+
+const guns = [
+"R-301","Flatline","Volt","R99","Wingman","Peacekeeper",
+"Mastiff","Alternator","Hemlok","Havoc","Spitfire","Devotion"
+];
+
+function rand(arr){
+return arr[Math.floor(Math.random()*arr.length)];
+}
+
+function makeRoll(){
+
+let p1 = rand(legends);
+let p2 = rand(legends);
+
+while(p1 === p2){
+p2 = rand(legends);
+}
+
+let g1 = rand(guns);
+let g2 = rand(guns);
+
+while(g2 === g1){
+g2 = rand(guns);
+}
+
+let g3 = rand(guns);
+let g4 = rand(guns);
+
+while(
+g3 === g4 ||
+g3 === g1 ||
+g3 === g2 ||
+g4 === g1 ||
+g4 === g2
+){
+g3 = rand(guns);
+g4 = rand(guns);
+}
+
+return {
+p1Legend:p1,
+p2Legend:p2,
+p1Guns:[g1,g2],
+p2Guns:[g3,g4]
+};
+
+}
+
+function display(r){
+
+if(!r) return;
+
+document.getElementById("result").innerHTML = `
+
+<div class="name">Dj Read</div>
+${r.p1Legend}<br>
+${r.p1Guns.join(" + ")}
+
+<div class="name">Tvdb</div>
+${r.p2Legend}<br>
+${r.p2Guns.join(" + ")}
+
+`;
+
+}
+
+async function loadCurrent(){
+
+const {data,error} = await supabaseClient
+.from("session")
+.select("roll")
+.eq("id",1)
+.single();
+
+if(error){
+document.getElementById("status").innerHTML =
+"<span class='error'>Load failed: "+error.message+"</span>";
+return;
+}
+
+display(data.roll);
+
+document.getElementById("status").innerHTML =
+"Connected.";
+
+}
+
+async function roll(){
+
+document.getElementById("status").innerHTML =
+"Rolling...";
+
+const newRoll = makeRoll();
+
+const {error} = await supabaseClient
+.from("session")
+.update({roll:newRoll})
+.eq("id",1);
+
+if(error){
+
+document.getElementById("status").innerHTML =
+"<span class='error'>Update failed: "+error.message+"</span>";
+
+return;
+
+}
+
+document.getElementById("status").innerHTML =
+"Roll sent.";
+
+}
+
+document.getElementById("rollBtn").addEventListener(
+"click",
+roll
+);
+
+supabaseClient
+.channel("live-roll")
+.on(
+"postgres_changes",
+{
+event:"UPDATE",
+schema:"public",
+table:"session"
+},
+(payload)=>{
+display(payload.new.roll);
+}
+)
+.subscribe();
+
+loadCurrent();
+
+</script>
+
+</body>
+</html>
