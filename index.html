@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Apex Duo Challenge</title>
   <link rel="icon" href="data:,">
-  <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=lJZfJU6Ew-sE1PdhAjsLDmsl1PZ9PpUaWwOch8K6E6QQSBvQmzGRy7atiUYhlJ5rGoybGAVg20d2ZJS0S1IWl8it11NMI1-EwPZizD-CCnfuPHKDSvbtgVPqi7K9xdT6lW3NXITkAH_Ur9pB8UiWRuiv0CWZxnStEE6q98JpGFpadPrzXJzkG31_363DV_e8OWinIwUlgKiFUhDCxo2ygszlYh3q9nhbdgdaNxrotAJiULHmT4IydFhbp6U8sBj2DX7IejXUYz9A3Sf2Jb34jQ" charset="UTF-8"></script><style>
+  <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=VPOpgPDguwom1NJYLX7aKuTL5JekCJInlwIu1934YwXz_qeJYl31_RZyllh8uWwbRhWJehBhPNgKM8j1iNz3Pz_cl--EOyGUlCdfUSblCJ7fP5N2yisJ9gxpVT2wa7wNtPsJjmINES3ooLk7GmB-3OK-GODNs3eOFlOkIv_GnuLU2siHl1LQE_0VpfpSmE3ouaWrVe2JqQJnRN9s6FFPOAD4POZ1INUk71RhgnYeaGwAcq95CNzsNO4oeuWDy1D6-cgIOCfc4tLTNfP1ffkshg" charset="UTF-8"></script><style>
     :root{
       --bg:#070a0f;
       --bg2:#0b1119;
@@ -1145,7 +1145,7 @@
       return source.filter(item => !removeSet.has(item));
     }
 
-    function applyCommittedRoll(state, option, notices) {
+    function applyCommittedRoll(state, option, notices, previewOption = null) {
       state.p1LastLegend = option.legend1;
       state.p2LastLegend = option.legend2;
       state.p1LastGuns = sortedCombo(option.guns1);
@@ -1161,6 +1161,8 @@
         chaosMode: option.chaosMode || null,
         p1: { name: "Dj Read", legend: option.legend1, guns: [...option.guns1] },
         p2: { name: "Tvdb", legend: option.legend2, guns: [...option.guns2] },
+        previewP1Guns: previewOption ? [...previewOption.guns1] : null,
+        previewP2Guns: previewOption ? [...previewOption.guns2] : null,
         notices: [...notices]
       };
 
@@ -1169,7 +1171,7 @@
 
     function simulateFutureRollExists(currentState, committedOption) {
       const temp = deepClone(currentState);
-      applyCommittedRoll(temp, committedOption, []);
+      applyCommittedRoll(temp, committedOption, [], null);
 
       if (temp.remainingLegends.length < 2 || !hasAnyValidLegendPair(temp)) {
         temp.remainingLegends = [...CHARACTERS];
@@ -1220,7 +1222,12 @@
           if (finalOption.chaosMode === "pistol") notices.push("Chaos round: pistol only");
         }
 
-        applyCommittedRoll(working, finalOption, notices.length ? notices : ["Roll completed"]);
+        const previewOption =
+          finalOption.chaosMode === "pistol" ? standardOption :
+          finalOption.chaosMode === "swap" ? standardOption :
+          null;
+
+        applyCommittedRoll(working, finalOption, notices.length ? notices : ["Roll completed"], previewOption);
         return working;
       }
 
@@ -1454,6 +1461,24 @@
 
         document.getElementById("revealStage").textContent =
           roll.chaosMode === "swap" ? "CHAOS: Swap Weapons" : "CHAOS: Pistols Only";
+
+        if (roll.chaosMode === "pistol" && roll.previewP1Guns && roll.previewP2Guns) {
+          await new Promise(r => setTimeout(r, 120));
+
+          renderWeaponRows("p1Weapons", roll.previewP1Guns);
+          roll.previewP1Guns.forEach((gun, idx) => setWeaponImage(`p1Weapons_img_${idx}`, gun));
+
+          renderWeaponRows("p2Weapons", roll.previewP2Guns);
+          roll.previewP2Guns.forEach((gun, idx) => setWeaponImage(`p2Weapons_img_${idx}`, gun));
+
+          await new Promise(r => setTimeout(r, 380));
+
+          renderWeaponRows("p1Weapons", roll.p1.guns);
+          roll.p1.guns.forEach((gun, idx) => setWeaponImage(`p1Weapons_img_${idx}`, gun));
+
+          renderWeaponRows("p2Weapons", roll.p2.guns);
+          roll.p2.guns.forEach((gun, idx) => setWeaponImage(`p2Weapons_img_${idx}`, gun));
+        }
       } else {
         document.getElementById("revealStage").textContent = "Loadouts locked";
       }
