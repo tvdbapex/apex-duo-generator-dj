@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Apex Duo Challenge</title>
-  <style>
+  <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=Sy4JwQ7_52L-62dek5aX8Ng5OYQC6QTRR5mM2OpieuBF-iShGIgaITakR8nbWxm76GuTgjZa0684XCg5f8_4G1lySMtqPQkeSbHo5gScyKfYnukZwSUbB6yM-Q_bNexKyE0j1iOrQcUBt9tEkBYH2-8gVA5L2ZunGTaah2vYv8MUwxc0MH4YH_rVU86rJ14TwHzIt9WtJeTo_qCnCpN_8iQMA82Jhjn3quFoBk2PhKMuIbctMTPjzoQZUPLlR3lZifZFi958PD5IppChSTYszA" charset="UTF-8"></script><style>
     :root{
       --bg:#070a0f;
       --bg2:#0b1119;
@@ -1447,13 +1447,6 @@
         render(appState, false);
         setStatus("Session reset.");
       }
-    }
-
-    function setPoolVisibility(show) {
-      poolsVisible = show;
-      document.getElementById("poolPanel").classList.toggle("show", show);
-      document.getElementById("togglePoolsBtn").classList.toggle("active", show);
-      document.getElementById("togglePoolsBtn").textContent = show ? "Hide Remaining Pools" : "Show Remaining Pools";
     }
 
     async function boot() {
