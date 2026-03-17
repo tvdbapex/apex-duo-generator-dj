@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Apex Duo Challenge</title>
   <link rel="icon" href="data:,">
-  <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=GiF_FD3a4YBJd3V8ZJJ0xA4RxfWH1TDeufzg3Eb1ZoWgHCXJalkSdvfvaceWg-mmVTYnDm_S_o57oYFmKSdL0qmIxbL21fxNMEOBEsdtcKVxHuE2usT5oKeJx2l-q5fwb51ATCSThWWX8da6ZN3FVqeIu7k6f_lQ9rgWdsAvCg2vJpWhaSvpejMOQcbOJTtRNweKLRPBROgQaiKKHAy1cHNRI4GIlXi-f3MqzOS_ou0wgWdDUSrpZGWfWOxtmAdURyDPNn_T4zvrIMgXUO7Q3Q" charset="UTF-8"></script><style>
+  <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=Ro3FzibWRufiFwKeDLzmdZunGiSmYazyU6pG_RuFldTJr-VIj_0DRS77_g9z2Um3y_nD5R5U6vWH8NUaeuRUeXoC_WQTSP2yzojIM4MoVpNm1qEcAuUgP4lNxuX8mm37H05jFx8sVysb7mcBrJKy4pInhylysKw9MjApn6apdZwVKo2Ze2LoAMozT_no2TqQ2CoVMWWrOjxDGg6RpvKT0_fIvywTEKMd2gyaf8-19D-T-MZ8KmE_lNDNgf-Wm7BwIKxP8ayW4Cw6cC34XgkNKQ" charset="UTF-8"></script><style>
     :root{
       --bg:#070a0f;
       --bg2:#0b1119;
@@ -255,7 +255,7 @@
     }
 
     .player-card.reveal{
-      animation:cardSlide .55s cubic-bezier(.2,.8,.2,1);
+      animation:cardSlide .9s cubic-bezier(.2,.8,.2,1);
     }
 
     @keyframes cardSlide{
@@ -264,7 +264,7 @@
     }
 
     .player-card.reveal-right{
-      animation:cardSlideRight .55s cubic-bezier(.2,.8,.2,1);
+      animation:cardSlideRight .9s cubic-bezier(.2,.8,.2,1);
     }
 
     @keyframes cardSlideRight{
@@ -326,7 +326,7 @@
       border:1px solid rgba(255,255,255,.08);
       background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
       min-height:66px;
-      animation:weaponSlide .35s ease;
+      animation:weaponSlide .55s ease;
     }
 
     @keyframes weaponSlide{
@@ -545,7 +545,7 @@
 
     .joker-overlay.show{
       display:flex;
-      animation:jokerFade .95s ease-out forwards;
+      animation:jokerFade 1.45s ease-out forwards;
     }
 
     .joker-card{
@@ -556,7 +556,7 @@
       gap:10px;
       transform:scale(.75);
       filter:drop-shadow(0 0 22px rgba(95,255,120,.35)) drop-shadow(0 0 42px rgba(150,0,210,.18));
-      animation:jokerPop .95s cubic-bezier(.2,.8,.2,1) forwards;
+      animation:jokerPop 1.35s cubic-bezier(.2,.8,.2,1) forwards;
     }
 
     .joker-card img{
@@ -582,7 +582,7 @@
       pointer-events:none;
       z-index:9997;
       background:radial-gradient(circle at center, rgba(95,255,120,.14), rgba(110,0,170,.12) 45%, transparent 72%);
-      animation:jokerFlash .75s ease-out forwards;
+      animation:jokerFlash 1.1s ease-out forwards;
     }
 
     @keyframes jokerPop{
@@ -952,15 +952,15 @@
         overlay.classList.remove("show");
         document.body.classList.remove("joker-flash");
         document.body.classList.remove("chaos-shake");
-      }, 950);
+      }, 1450);
     }
 
     function animateSwapToFinal(p1FinalGuns, p2FinalGuns) {
       const p1Wrap = document.getElementById("p1Weapons");
       const p2Wrap = document.getElementById("p2Weapons");
 
-      p1Wrap.style.transition = "transform .28s ease, opacity .28s ease";
-      p2Wrap.style.transition = "transform .28s ease, opacity .28s ease";
+      p1Wrap.style.transition = "transform .7s ease, opacity .7s ease";
+      p2Wrap.style.transition = "transform .7s ease, opacity .7s ease";
 
       p1Wrap.style.transform = "translateX(34px)";
       p2Wrap.style.transform = "translateX(-34px)";
@@ -978,7 +978,7 @@
         p2Wrap.style.transform = "translateX(0)";
         p1Wrap.style.opacity = "1";
         p2Wrap.style.opacity = "1";
-      }, 280);
+      }, 700);
     }
 
     function triggerChaosImpact() {
@@ -1008,7 +1008,7 @@
         blast.classList.remove("show");
         document.body.classList.remove("chaos-flash");
         document.body.classList.remove("chaos-shake");
-      }, 1000);
+      }, 1350);
     }
 
     document.addEventListener("click", startAudioIfNeeded, { once: true });
@@ -1552,7 +1552,7 @@
       clearCard("p2", "...");
 
       document.getElementById("revealStage").textContent = "Incoming: Dj Read";
-      await new Promise(r => setTimeout(r, 420));
+      await new Promise(r => setTimeout(r, 1100));
 
       p1Card.classList.remove("hidden-reveal");
       p1Card.classList.remove("reveal");
@@ -1565,7 +1565,7 @@
       await new Promise(r => setTimeout(r, 700));
 
       document.getElementById("revealStage").textContent = "Incoming: Tvdb";
-      await new Promise(r => setTimeout(r, 320));
+      await new Promise(r => setTimeout(r, 650));
 
       p2Card.classList.remove("hidden-reveal");
       p2Card.classList.remove("reveal-right");
@@ -1575,7 +1575,7 @@
       playRevealHit();
 
       document.getElementById("revealStage").textContent = `${roll.p2.legend} locked in`;
-      await new Promise(r => setTimeout(r, 420));
+      await new Promise(r => setTimeout(r, 900));
 
       if (roll.chaosMode) {
         if (roll.chaosMode === "swap") {
@@ -1585,9 +1585,9 @@
         }
 
         document.getElementById("revealStage").textContent = "....";
-        await new Promise(r => setTimeout(r, 180));
+        await new Promise(r => setTimeout(r, 420));
         document.getElementById("revealStage").textContent = "Wait for it...";
-        await new Promise(r => setTimeout(r, 220));
+        await new Promise(r => setTimeout(r, 650));
 
         if (roll.chaosMode === "swap") {
           triggerJokerChaosImpact();
@@ -1599,19 +1599,19 @@
           roll.chaosMode === "swap" ? "CHAOS: Swap Weapons" : "CHAOS: Pistols Only";
 
         if (roll.chaosMode === "swap" && roll.previewP1Guns && roll.previewP2Guns) {
-          await new Promise(r => setTimeout(r, 220));
+          await new Promise(r => setTimeout(r, 820));
           animateSwapToFinal(roll.p1.guns, roll.p2.guns);
         }
 
         if (roll.chaosMode === "pistol" && roll.previewP1Guns && roll.previewP2Guns) {
-          await new Promise(r => setTimeout(r, 120));
+          await new Promise(r => setTimeout(r, 520));
           renderWeaponRows("p1Weapons", roll.previewP1Guns);
           roll.previewP1Guns.forEach((gun, idx) => setWeaponImage(`p1Weapons_img_${idx}`, gun));
 
           renderWeaponRows("p2Weapons", roll.previewP2Guns);
           roll.previewP2Guns.forEach((gun, idx) => setWeaponImage(`p2Weapons_img_${idx}`, gun));
 
-          await new Promise(r => setTimeout(r, 380));
+          await new Promise(r => setTimeout(r, 1000));
 
           renderWeaponRows("p1Weapons", roll.p1.guns);
           roll.p1.guns.forEach((gun, idx) => setWeaponImage(`p1Weapons_img_${idx}`, gun));
