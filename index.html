@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Apex Duo Challenge</title>
   <link rel="icon" href="data:,">
-  <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=sufLlnwrwd6zr8-_YLdl9gNkAfR7KKSgJWgekLukKJjetmOI-709S1QKJgU2a15KQ_AJB33wUX6GoKoXNwxUW8WIsucV0gj6P909fdaLeXWTtzNIc_a2KS53Mg92yjHqW2GkhjcehpJtZ4FENAV_EKJClQks3XrI6r_EjguLLXjIMYREutLnit1QsSbc2k1wOpOww7dUYm8C2iH8-2qfBnyky3LuBBGysQolMFHccfvDf5bjOpTNETLgDAV61K7LjK6ueOE_TNclzxTeyS9iHg" charset="UTF-8"></script><style>
+  <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=_QQ8996fjB8kvK9SyDjeQTAyb8NK55ZHyoZBDpq0zzbcUY0RrF17KflHVLJhC9lZcqrI-VtElu3Q6zzRZyIwnekIapde21scUhJqiP3eu13wM9kxKX2vNmtU9a76ZCGRTwWf0T__T4wB66ztsgQzvuOpeKdnuOCk05UbcLwvS_Dzb3RPz5MazJhHcFRXPgRAoNVBePnPZ5-81R1c3vX1w2__OY8x4HVAMaNf035xykDCCXWBEteI_N_MSv0BJJLiQJUrPIMBPqsuy7DG0NZ4TA" charset="UTF-8"></script><style>
     :root{
       --bg:#070a0f;
       --bg2:#0b1119;
@@ -64,6 +64,20 @@
     }
 
     .chaos-blast.show{display:block}
+
+    body.chaos-shake{
+      animation:chaosShake .32s linear 1;
+    }
+
+    @keyframes chaosShake{
+      0%{transform:translate(0,0)}
+      20%{transform:translate(-6px,2px)}
+      40%{transform:translate(6px,-2px)}
+      60%{transform:translate(-4px,-1px)}
+      80%{transform:translate(4px,2px)}
+      100%{transform:translate(0,0)}
+    }
+
 
     @keyframes blast{
       0%{opacity:0;transform:scale(.4)}
@@ -631,11 +645,7 @@
     </div>
 
     <div class="meta-grid">
-      <div class="panel">
-        <h3>Session Notes</h3>
-        <div id="noticeList" class="notice-list">
-          <div class="notice">No rolls yet.</div>
-        </div>
+      
         <div class="footer-note">
           Pistol Only chaos intentionally overrides cross-player unique guns and unique classes, otherwise that chaos mode would be impossible in Apex because there are only 3 pistols.
         </div>
@@ -835,6 +845,36 @@
       if (!soundEnabled) return;
       sounds.explosion.currentTime = 0;
       sounds.explosion.play().catch(() => {});
+    }
+
+    function triggerChaosImpact() {
+      const blast = document.getElementById("chaosBlast");
+      const chaosBanner = document.getElementById("chaosBanner");
+      const chaosText = document.getElementById("chaosText");
+
+      blast.classList.remove("show");
+      void blast.offsetWidth;
+      blast.classList.add("show");
+
+      document.body.classList.remove("chaos-flash");
+      void document.body.offsetWidth;
+      document.body.classList.add("chaos-flash");
+
+      document.body.classList.remove("chaos-shake");
+      void document.body.offsetWidth;
+      document.body.classList.add("chaos-shake");
+
+      chaosBanner.classList.remove("show");
+      void chaosBanner.offsetWidth;
+      chaosBanner.classList.add("show");
+
+      playChaosExplosion();
+
+      setTimeout(() => {
+        blast.classList.remove("show");
+        document.body.classList.remove("chaos-flash");
+        document.body.classList.remove("chaos-shake");
+      }, 1000);
     }
 
     document.addEventListener("click", startAudioIfNeeded, { once: true });
@@ -1395,37 +1435,19 @@
       await new Promise(r => setTimeout(r, 420));
 
       if (roll.chaosMode) {
-        await new Promise(r => setTimeout(r, 180));
-
-        const blast = document.getElementById("chaosBlast");
-        const chaosBanner = document.getElementById("chaosBanner");
-        const chaosText = document.getElementById("chaosText");
-
         if (roll.chaosMode === "swap") {
-          chaosText.textContent = "Both players must swap guns";
+          document.getElementById("chaosText").textContent = "Both players must swap guns";
         } else {
-          chaosText.textContent = "Pistol only";
+          document.getElementById("chaosText").textContent = "Pistol only";
         }
 
-        // Trigger sound and visuals at the exact same moment for surprise impact
-        blast.classList.remove("show");
-        void blast.offsetWidth;
-        blast.classList.add("show");
+        document.getElementById("revealStage").textContent = "....";
+        await new Promise(r => setTimeout(r, 180));
+        document.getElementById("revealStage").textContent = "Wait for it...";
+        await new Promise(r => setTimeout(r, 220));
 
-        document.body.classList.remove("chaos-flash");
-        void document.body.offsetWidth;
-        document.body.classList.add("chaos-flash");
-
-        chaosBanner.classList.remove("show");
-        void chaosBanner.offsetWidth;
-        chaosBanner.classList.add("show");
-
-        playChaosExplosion();
-
-        setTimeout(() => {
-          blast.classList.remove("show");
-          document.body.classList.remove("chaos-flash");
-        }, 1000);
+        // Hit sound + banner + red blast all together after a tiny silence for impact
+        triggerChaosImpact();
 
         document.getElementById("revealStage").textContent =
           roll.chaosMode === "swap" ? "CHAOS: Swap Weapons" : "CHAOS: Pistols Only";
