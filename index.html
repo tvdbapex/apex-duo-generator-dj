@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Apex Duo Challenge</title>
-  <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=Sy4JwQ7_52L-62dek5aX8Ng5OYQC6QTRR5mM2OpieuBF-iShGIgaITakR8nbWxm76GuTgjZa0684XCg5f8_4G1lySMtqPQkeSbHo5gScyKfYnukZwSUbB6yM-Q_bNexKyE0j1iOrQcUBt9tEkBYH2-8gVA5L2ZunGTaah2vYv8MUwxc0MH4YH_rVU86rJ14TwHzIt9WtJeTo_qCnCpN_8iQMA82Jhjn3quFoBk2PhKMuIbctMTPjzoQZUPLlR3lZifZFi958PD5IppChSTYszA" charset="UTF-8"></script><style>
+  <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=T0-Nk6EXCbUq44uwDn-kgDhABFd-YGcslYkpo2OqsK1VaOk7ZvMGf64LnjDTPWzQQM2nsQM_YopVELp2Ey_mYRPYd_ZGpntoED15QhLE_kq6X-vuTeoYYUyL-VrM-Scx8tc0wnH-4RDDt274rBsiPC1Zh5tXrOE-qd8LjwGV2FLm-o7iz1Dm2mMKu0zrq3nNjt4AtgZXyzEWXhb1wiVUNVAGm-mYcofBz2AAjkZ16SW8HfAws-850RUkwubjf1Kq26_t0mlGJ97o4xtzDPoajw" charset="UTF-8"></script><style>
     :root{
       --bg:#070a0f;
       --bg2:#0b1119;
@@ -785,6 +785,21 @@
     let lastRenderedTimestamp = null;
     let poolsVisible = false;
 
+    const sounds = {
+      bg: new Audio("assets/sounds/background.wav"),
+      click: new Audio("assets/sounds/ui-sound.mp3"),
+      whoosh: new Audio("assets/sounds/woosh.mp3"),
+      explosion: new Audio("assets/sounds/explosion.mp3"),
+      alarm: new Audio("assets/sounds/alarm.mp3")
+    };
+
+    sounds.bg.loop = true;
+    sounds.bg.volume = 0.18;
+    sounds.click.volume = 0.5;
+    sounds.whoosh.volume = 0.65;
+    sounds.explosion.volume = 0.7;
+    sounds.alarm.volume = 0.55;
+
     function setStatus(text, isError = false) {
       const el = document.getElementById("statusText");
       el.textContent = text;
@@ -1128,46 +1143,47 @@
         if (!Ctx) return null;
         audioCtx = new Ctx();
       }
+      if (audioCtx.state === "suspended") {
+        audioCtx.resume().catch(() => {});
+      }
       return audioCtx;
     }
 
-    function tone(freq=440,duration=.08,type="sine",gainValue=.03,delay=0) {
-      const ctx = ensureAudio();
-      if (!ctx) return;
-      const start = ctx.currentTime + delay;
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
+    function safePlay(audio, reset = true) {
+      if (!soundEnabled || !audio) return;
+      ensureAudio();
+      try {
+        if (reset) audio.currentTime = 0;
+        audio.play().catch(() => {});
+      } catch {}
+    }
 
-      osc.type = type;
-      osc.frequency.setValueAtTime(freq, start);
+    function startBackgroundMusic() {
+      if (!soundEnabled) return;
+      ensureAudio();
+      if (sounds.bg.paused) {
+        sounds.bg.play().catch(() => {});
+      }
+    }
 
-      gain.gain.setValueAtTime(0.0001, start);
-      gain.gain.exponentialRampToValueAtTime(gainValue, start + 0.01);
-      gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
-
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-
-      osc.start(start);
-      osc.stop(start + duration + 0.03);
+    function stopBackgroundMusic() {
+      sounds.bg.pause();
     }
 
     function playRollTick() {
-      tone(580, .045, "square", .018);
+      safePlay(sounds.click, true);
     }
 
     function playRevealHit() {
-      tone(320, .08, "triangle", .03, 0);
-      tone(480, .11, "triangle", .028, .05);
-      tone(700, .14, "triangle", .025, .1);
+      safePlay(sounds.whoosh, true);
     }
 
     function playChaosAlarmExplosion() {
-      tone(880, .12, "square", .03, 0);
-      tone(660, .12, "square", .026, .14);
-      tone(180, .32, "sawtooth", .04, .3);
-      tone(110, .38, "sawtooth", .035, .38);
-      tone(70, .45, "triangle", .03, .45);
+      if (!soundEnabled) return;
+      safePlay(sounds.alarm, true);
+      setTimeout(() => {
+        safePlay(sounds.explosion, true);
+      }, 320);
     }
 
     function setPoolVisibility(show) {
@@ -1406,6 +1422,7 @@
     async function performRoll() {
       if (isRolling) return;
 
+      startBackgroundMusic();
       isRolling = true;
       const rollBtn = document.getElementById("rollBtn");
       rollBtn.disabled = true;
@@ -1449,6 +1466,13 @@
       }
     }
 
+    function setPoolVisibility(show) {
+      poolsVisible = show;
+      document.getElementById("poolPanel").classList.toggle("show", show);
+      document.getElementById("togglePoolsBtn").classList.toggle("active", show);
+      document.getElementById("togglePoolsBtn").textContent = show ? "Hide Remaining Pools" : "Show Remaining Pools";
+    }
+
     async function boot() {
       setStatus("Connecting...");
       const state = await loadState();
@@ -1457,6 +1481,10 @@
       lastRenderedTimestamp = state.lastUpdated || null;
       render(appState, false);
       setStatus("Connected.");
+
+      document.body.addEventListener("click", () => {
+        startBackgroundMusic();
+      }, { once: true });
     }
 
     document.getElementById("rollBtn").addEventListener("click", performRoll);
@@ -1471,7 +1499,13 @@
       const btn = document.getElementById("soundToggleBtn");
       btn.classList.toggle("active", soundEnabled);
       btn.textContent = soundEnabled ? "Sound On" : "Sound Off";
-      if (soundEnabled) playRevealHit();
+
+      if (soundEnabled) {
+        startBackgroundMusic();
+        safePlay(sounds.whoosh, true);
+      } else {
+        stopBackgroundMusic();
+      }
     });
 
     supabaseClient
