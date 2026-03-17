@@ -4,13 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Apex Duo Challenge</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root{
       --bg:#070a0f;
       --bg2:#0b1119;
       --panel:rgba(15,22,34,.88);
-      --panel2:rgba(20,28,43,.96);
       --line:rgba(255,255,255,.08);
       --text:#f6f8fb;
       --muted:#97a4b5;
@@ -650,13 +648,14 @@
     </div>
   </div>
 
-  <script>
+  <script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
     const PROJECT_URL = "https://sfareqxrytcwfbbtazaf.supabase.co";
     const PUBLISHABLE_KEY = "sb_publishable_h9jnpKtpdETR23obQCPEjg_fE_Z3eo0";
     const STATE_ROW_ID = 1;
     const CHAOS_CHANCE = 0.05;
 
-    const { createClient } = supabase;
     const supabaseClient = createClient(PROJECT_URL, PUBLISHABLE_KEY);
 
     const CHARACTERS = [
@@ -893,7 +892,7 @@
       const { data, error } = await supabaseClient
         .from("session")
         .select("roll")
-        .eq("id", 1)
+        .eq("id", STATE_ROW_ID)
         .maybeSingle();
 
       if (error) {
@@ -1054,8 +1053,8 @@
       state.currentRoll = {
         timestamp: nowIso(),
         chaosMode: option.chaosMode || null,
-        p1: { name: PLAYER_ONE_NAME, legend: option.legend1, guns: [...option.guns1] },
-        p2: { name: PLAYER_TWO_NAME, legend: option.legend2, guns: [...option.guns2] },
+        p1: { name: "Dj Read", legend: option.legend1, guns: [...option.guns1] },
+        p2: { name: "Tvdb", legend: option.legend2, guns: [...option.guns2] },
         notices: [...notices]
       };
 
@@ -1111,11 +1110,8 @@
 
         if (triggerChaos && chaosCandidates.length) {
           finalOption = chaosCandidates[0];
-          if (finalOption.chaosMode === "swap") {
-            notices.push("Chaos round: swap guns");
-          } else if (finalOption.chaosMode === "pistol") {
-            notices.push("Chaos round: pistol only");
-          }
+          if (finalOption.chaosMode === "swap") notices.push("Chaos round: swap guns");
+          if (finalOption.chaosMode === "pistol") notices.push("Chaos round: pistol only");
         }
 
         applyCommittedRoll(working, finalOption, notices.length ? notices : ["Roll completed"]);
@@ -1208,6 +1204,7 @@
     function setLegendImage(wrapperId, legendName) {
       const wrap = document.getElementById(wrapperId);
       const file = legendImages[legendName];
+
       if (!file) {
         wrap.innerHTML = `<div class="legend-fallback">${legendName}</div>`;
         return;
@@ -1226,6 +1223,7 @@
     function setWeaponImage(holderId, gunName) {
       const holder = document.getElementById(holderId);
       const file = weaponImages[gunName];
+
       if (!file) {
         holder.textContent = "IMG";
         return;
@@ -1258,8 +1256,10 @@
 
     function startRollAnimation() {
       clearInterval(rollingInterval);
+
       const p1Card = document.getElementById("p1Card");
       const p2Card = document.getElementById("p2Card");
+
       p1Card.classList.add("rolling");
       p2Card.classList.add("rolling");
       p1Card.classList.remove("reveal","reveal-right","hidden-reveal");
@@ -1330,7 +1330,6 @@
       playRevealHit();
 
       document.getElementById("revealStage").textContent = `${roll.p2.legend} locked in`;
-
       await new Promise(r => setTimeout(r, 420));
 
       if (roll.chaosMode) {
@@ -1448,6 +1447,13 @@
         render(appState, false);
         setStatus("Session reset.");
       }
+    }
+
+    function setPoolVisibility(show) {
+      poolsVisible = show;
+      document.getElementById("poolPanel").classList.toggle("show", show);
+      document.getElementById("togglePoolsBtn").classList.toggle("active", show);
+      document.getElementById("togglePoolsBtn").textContent = show ? "Hide Remaining Pools" : "Show Remaining Pools";
     }
 
     async function boot() {
