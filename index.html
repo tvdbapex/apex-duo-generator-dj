@@ -7,136 +7,194 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
-      --bg: #0b0d10;
-      --panel: #13171d;
-      --panel-2: #1a2028;
-      --text: #f5f7fa;
-      --muted: #a8b0bb;
+      --bg: #070a0f;
+      --bg-2: #0b1119;
+      --panel: rgba(15, 22, 34, 0.86);
+      --panel-2: rgba(20, 28, 43, 0.96);
+      --panel-3: rgba(255,255,255,0.03);
+      --text: #f6f8fb;
+      --muted: #9aa6b5;
+      --line: rgba(255,255,255,0.09);
       --accent: #ff6a2b;
-      --accent-2: #ffb347;
-      --danger: #ff5a5a;
-      --success: #6ee7a8;
-      --border: #2a313b;
+      --accent-2: #ff9a3c;
+      --good: #68f0a8;
+      --danger: #ff5d5d;
+      --glow: 0 0 0 1px rgba(255,255,255,0.05), 0 12px 40px rgba(0,0,0,0.35);
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
+      min-height: 100vh;
       font-family: Arial, sans-serif;
-      background: linear-gradient(180deg, #0b0d10 0%, #0f1318 100%);
       color: var(--text);
+      background:
+        radial-gradient(circle at 20% 0%, rgba(255,106,43,0.12), transparent 32%),
+        radial-gradient(circle at 90% 20%, rgba(61,150,255,0.12), transparent 28%),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
+      overflow-x: hidden;
+    }
+
+    body.chaos-flash::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(circle, rgba(255,110,110,0.35) 0%, rgba(255,0,0,0.12) 40%, transparent 70%);
+      animation: chaosFlash 0.85s ease-out forwards;
+      z-index: 9999;
+    }
+
+    @keyframes chaosFlash {
+      0% { opacity: 0; }
+      15% { opacity: 1; }
+      100% { opacity: 0; }
     }
 
     .wrap {
-      max-width: 1100px;
+      max-width: 1320px;
       margin: 0 auto;
-      padding: 24px;
+      padding: 22px;
     }
 
     .topbar {
       display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      align-items: center;
       justify-content: space-between;
-      margin-bottom: 20px;
+      gap: 16px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
     }
 
-    h1 {
+    .title-block h1 {
       margin: 0;
-      font-size: 40px;
-      line-height: 1;
+      font-size: 54px;
+      line-height: 0.95;
+      letter-spacing: -0.03em;
+      text-shadow: 0 6px 18px rgba(0,0,0,0.35);
     }
 
     .subtitle {
       color: var(--muted);
-      margin-top: 8px;
-      font-size: 15px;
+      margin-top: 10px;
+      font-size: 16px;
     }
 
     .controls {
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
+      align-items: center;
     }
 
     button {
-      border: 1px solid var(--border);
-      background: var(--panel);
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
       color: var(--text);
+      border-radius: 16px;
       padding: 14px 18px;
-      font-size: 16px;
-      font-weight: 700;
       cursor: pointer;
-      border-radius: 12px;
-      transition: 0.15s ease;
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+      box-shadow: var(--glow);
     }
 
     button:hover {
-      border-color: var(--accent);
       transform: translateY(-1px);
+      border-color: rgba(255,106,43,0.45);
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: default;
+      transform: none;
     }
 
     .primary {
-      background: linear-gradient(180deg, #ff7b3c 0%, #ff5a1f 100%);
+      min-width: 160px;
+      background: linear-gradient(180deg, var(--accent-2), var(--accent));
       border: none;
       color: white;
-      min-width: 150px;
+      font-size: 18px;
+      box-shadow: 0 10px 30px rgba(255,106,43,0.28);
+    }
+
+    .secondary-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .pill-toggle.active {
+      border-color: rgba(255,106,43,0.5);
+      background: linear-gradient(180deg, rgba(255,106,43,0.18), rgba(255,106,43,0.06));
     }
 
     .statusbar {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 12px;
+      gap: 14px;
       margin-bottom: 16px;
     }
 
     .stat {
       background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 16px;
+      box-shadow: var(--glow);
+      backdrop-filter: blur(12px);
     }
 
     .stat-label {
-      font-size: 12px;
       color: var(--muted);
       text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 8px;
+      letter-spacing: 0.12em;
+      font-size: 12px;
+      margin-bottom: 10px;
     }
 
     .stat-value {
-      font-size: 24px;
-      font-weight: 800;
+      font-size: 42px;
+      font-weight: 900;
+      line-height: 1;
     }
 
-    .banner {
+    .chaos-banner {
       display: none;
       margin-bottom: 16px;
-      background: linear-gradient(90deg, #561111 0%, #8f1d1d 100%);
-      border: 1px solid #a92d2d;
-      border-radius: 16px;
-      padding: 18px;
+      border-radius: 22px;
+      padding: 18px 22px;
+      border: 1px solid rgba(255,110,110,0.35);
+      background:
+        radial-gradient(circle at 20% 50%, rgba(255,255,255,0.08), transparent 20%),
+        linear-gradient(90deg, rgba(70,10,10,0.92), rgba(145,23,23,0.96));
+      box-shadow: 0 16px 45px rgba(70,0,0,0.35);
+      animation: chaosPulse 1.15s ease-in-out infinite alternate;
     }
 
-    .banner.show {
-      display: block;
+    .chaos-banner.show { display: block; }
+
+    @keyframes chaosPulse {
+      from { transform: scale(1); box-shadow: 0 16px 45px rgba(70,0,0,0.28); }
+      to { transform: scale(1.01); box-shadow: 0 20px 55px rgba(120,0,0,0.42); }
     }
 
-    .banner-title {
-      font-size: 28px;
+    .chaos-title {
+      font-size: 30px;
       font-weight: 900;
-      color: #fff3f3;
-      margin-bottom: 6px;
+      letter-spacing: 0.05em;
+      margin-bottom: 5px;
     }
 
-    .banner-sub {
-      color: #ffdede;
+    .chaos-sub {
+      color: #ffe4e4;
       font-size: 16px;
+      font-weight: 700;
     }
 
     .main-grid {
@@ -146,53 +204,199 @@
       margin-bottom: 16px;
     }
 
-    .card {
-      background: linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
-      border: 1px solid var(--border);
-      border-radius: 22px;
-      padding: 22px;
-      min-height: 280px;
+    .player-card {
+      position: relative;
+      overflow: hidden;
+      min-height: 430px;
+      background:
+        radial-gradient(circle at 90% 10%, rgba(255,255,255,0.06), transparent 25%),
+        linear-gradient(180deg, rgba(14,20,31,0.96), rgba(18,28,42,0.94));
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      box-shadow: var(--glow);
+      backdrop-filter: blur(12px);
     }
 
-    .player-name {
-      font-size: 16px;
+    .player-card.reveal {
+      animation: revealPulse 0.45s ease;
+    }
+
+    @keyframes revealPulse {
+      0% { transform: scale(0.985); filter: brightness(1.18); }
+      100% { transform: scale(1); filter: brightness(1); }
+    }
+
+    .player-card.rolling .legend-name,
+    .player-card.rolling .weapon-row,
+    .player-card.rolling .player-card-name {
+      opacity: 0.55;
+    }
+
+    .card-content {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      min-height: 430px;
+    }
+
+    .card-left {
+      padding: 24px 22px 22px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .player-card-name {
+      font-size: 14px;
       color: var(--muted);
+      letter-spacing: 0.16em;
       text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-bottom: 10px;
+      font-weight: 700;
     }
 
-    .legend {
-      font-size: 34px;
+    .legend-name {
+      font-size: 54px;
+      line-height: 0.95;
       font-weight: 900;
-      margin-bottom: 18px;
+      margin-top: 4px;
+      letter-spacing: -0.03em;
+      text-shadow: 0 6px 18px rgba(0,0,0,0.35);
+      min-height: 58px;
     }
 
-    .guns {
+    .weapons {
+      margin-top: 6px;
       display: grid;
       gap: 10px;
     }
 
-    .gun-pill {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid var(--border);
+    .weapon-row {
+      display: grid;
+      grid-template-columns: 64px 1fr;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
       border-radius: 999px;
-      padding: 12px 14px;
-      font-size: 18px;
-      font-weight: 700;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+      min-height: 66px;
+    }
+
+    .weapon-thumb {
+      width: 52px;
+      height: 52px;
+      object-fit: contain;
+      object-position: center;
+      display: block;
+      filter: drop-shadow(0 6px 10px rgba(0,0,0,0.35));
+    }
+
+    .weapon-thumb-wrap {
+      width: 52px;
+      height: 52px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.035);
+      border: 1px solid rgba(255,255,255,0.06);
+      overflow: hidden;
+    }
+
+    .weapon-thumb-wrap.no-image {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+    }
+
+    .weapon-name {
+      font-size: 22px;
+      font-weight: 900;
+      line-height: 1.05;
+    }
+
+    .weapon-class {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .card-right {
+      position: relative;
+      min-height: 430px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .legend-image-wrap {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .legend-image {
+      width: 100%;
+      max-width: 520px;
+      max-height: 100%;
+      object-fit: contain;
+      object-position: center bottom;
+      opacity: 0.94;
+      filter: drop-shadow(0 18px 42px rgba(0,0,0,0.45));
+      transition: opacity 0.2s ease;
+    }
+
+    .legend-fallback {
+      width: 82%;
+      aspect-ratio: 0.82;
+      border-radius: 28px;
+      border: 1px dashed rgba(255,255,255,0.12);
+      background:
+        radial-gradient(circle at 30% 20%, rgba(255,255,255,0.08), transparent 30%),
+        rgba(255,255,255,0.03);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-weight: 900;
+      font-size: 22px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .overlay-line {
+      position: absolute;
+      inset: auto 0 0 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent);
+      z-index: 2;
     }
 
     .meta-grid {
       display: grid;
-      grid-template-columns: 1.4fr 1fr;
+      grid-template-columns: 1.2fr 0.8fr;
       gap: 16px;
+      margin-bottom: 16px;
     }
 
     .panel {
       background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 18px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
       padding: 18px;
+      box-shadow: var(--glow);
+      backdrop-filter: blur(12px);
     }
 
     .panel h3 {
@@ -203,61 +407,127 @@
     .notice-list {
       display: grid;
       gap: 8px;
-      color: var(--muted);
-      font-size: 15px;
     }
 
     .notice {
-      padding: 10px 12px;
+      padding: 12px 14px;
+      border-radius: 14px;
       background: rgba(255,255,255,0.03);
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.05);
+      color: var(--text);
+      font-weight: 700;
     }
 
     .status-text {
       color: var(--muted);
-      font-size: 15px;
-      line-height: 1.5;
       white-space: pre-wrap;
+      line-height: 1.6;
+      min-height: 56px;
     }
 
-    .status-text.error {
-      color: var(--danger);
-    }
+    .status-text.error { color: var(--danger); }
 
     .small {
       font-size: 13px;
       color: var(--muted);
     }
 
+    .pool-panel {
+      display: none;
+      margin-bottom: 16px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 18px;
+      box-shadow: var(--glow);
+      backdrop-filter: blur(12px);
+    }
+
+    .pool-panel.show { display: block; }
+
+    .pool-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 12px;
+    }
+
+    .pool-box {
+      min-height: 200px;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 18px;
+      padding: 14px;
+      background: rgba(255,255,255,0.025);
+    }
+
+    .pool-title {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .pool-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .pool-chip {
+      font-size: 13px;
+      font-weight: 700;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.07);
+      background: rgba(255,255,255,0.035);
+      color: var(--text);
+    }
+
     .footer-note {
       margin-top: 12px;
       color: var(--muted);
       font-size: 12px;
-      line-height: 1.5;
+      line-height: 1.55;
     }
 
-    @media (max-width: 900px) {
+    @media (max-width: 1080px) {
       .statusbar,
       .main-grid,
-      .meta-grid {
+      .meta-grid,
+      .pool-grid {
         grid-template-columns: 1fr;
       }
 
-      h1 {
-        font-size: 32px;
+      .card-content {
+        grid-template-columns: 1fr;
       }
 
-      .legend {
-        font-size: 28px;
+      .card-right {
+        min-height: 280px;
       }
+
+      .legend-name {
+        font-size: 42px;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .wrap { padding: 14px; }
+      .title-block h1 { font-size: 40px; }
+      .legend-name { font-size: 34px; min-height: 38px; }
+      .weapon-name { font-size: 18px; }
+      .stat-value { font-size: 34px; }
+      .controls, .secondary-row { width: 100%; }
+      .controls button, .secondary-row button { flex: 1 1 auto; }
     }
   </style>
 </head>
 <body>
   <div class="wrap">
     <div class="topbar">
-      <div>
+      <div class="title-block">
         <h1>Apex Duo Challenge</h1>
         <div class="subtitle">Live synced rules engine for Dj Read & Tvdb</div>
       </div>
@@ -265,6 +535,25 @@
       <div class="controls">
         <button id="rollBtn" class="primary">ROLL</button>
         <button id="resetAllBtn">Reset All</button>
+      </div>
+    </div>
+
+    <div class="secondary-row">
+      <button id="togglePoolsBtn" class="pill-toggle">Show Remaining Pools</button>
+      <button id="soundToggleBtn" class="pill-toggle active">Sound On</button>
+    </div>
+
+    <div id="poolPanel" class="pool-panel">
+      <h3>Remaining Cycle Pools</h3>
+      <div class="pool-grid">
+        <div class="pool-box">
+          <div class="pool-title">Legends Left</div>
+          <div id="remainingLegendsList" class="pool-list"></div>
+        </div>
+        <div class="pool-box">
+          <div class="pool-title">Guns Left</div>
+          <div id="remainingGunsList" class="pool-list"></div>
+        </div>
       </div>
     </div>
 
@@ -287,41 +576,60 @@
       </div>
     </div>
 
-    <div id="chaosBanner" class="banner">
-      <div class="banner-title">⚡ CHAOS ROUND</div>
-      <div class="banner-sub" id="chaosText">-</div>
+    <div id="chaosBanner" class="chaos-banner">
+      <div class="chaos-title">⚡ CHAOS ROUND</div>
+      <div id="chaosText" class="chaos-sub">-</div>
     </div>
 
     <div class="main-grid">
-      <div class="card">
-        <div class="player-name">Dj Read</div>
-        <div class="legend" id="p1Legend">Waiting...</div>
-        <div class="guns" id="p1Guns"></div>
+      <div id="p1Card" class="player-card">
+        <div class="card-content">
+          <div class="card-left">
+            <div class="player-card-name">Dj Read</div>
+            <div id="p1Legend" class="legend-name">Waiting...</div>
+            <div id="p1Weapons" class="weapons"></div>
+          </div>
+          <div class="card-right">
+            <div class="legend-image-wrap" id="p1LegendWrap">
+              <div class="legend-fallback">Waiting...</div>
+            </div>
+            <div class="overlay-line"></div>
+          </div>
+        </div>
       </div>
 
-      <div class="card">
-        <div class="player-name">Tvdb</div>
-        <div class="legend" id="p2Legend">Waiting...</div>
-        <div class="guns" id="p2Guns"></div>
+      <div id="p2Card" class="player-card">
+        <div class="card-content">
+          <div class="card-left">
+            <div class="player-card-name">Tvdb</div>
+            <div id="p2Legend" class="legend-name">Waiting...</div>
+            <div id="p2Weapons" class="weapons"></div>
+          </div>
+          <div class="card-right">
+            <div class="legend-image-wrap" id="p2LegendWrap">
+              <div class="legend-fallback">Waiting...</div>
+            </div>
+            <div class="overlay-line"></div>
+          </div>
+        </div>
       </div>
     </div>
 
     <div class="meta-grid">
       <div class="panel">
         <h3>Session Notes</h3>
-        <div class="notice-list" id="noticeList">
+        <div id="noticeList" class="notice-list">
           <div class="notice">No rolls yet.</div>
         </div>
         <div class="footer-note">
-          Pistol Only chaos intentionally overrides cross-player unique guns and unique classes,
-          otherwise that chaos mode would be impossible in Apex because there are only 3 pistols.
+          Pistol Only chaos intentionally overrides cross-player unique guns and unique classes, otherwise that chaos mode would be impossible in Apex because there are only 3 pistols.
         </div>
       </div>
 
       <div class="panel">
         <h3>Connection</h3>
         <div id="statusText" class="status-text">Starting...</div>
-        <div class="small" id="updatedAtText" style="margin-top: 12px;"></div>
+        <div id="updatedAtText" class="small" style="margin-top: 12px;"></div>
       </div>
     </div>
   </div>
@@ -330,12 +638,10 @@
     const PROJECT_URL = "https://sfareqxrytcwfbbtazaf.supabase.co";
     const PUBLISHABLE_KEY = "sb_publishable_h9jnpKtpdETR23obQCPEjg_fE_Z3eo0";
     const STATE_ROW_ID = 1;
+    const CHAOS_CHANCE = 0.05;
 
     const { createClient } = supabase;
     const supabaseClient = createClient(PROJECT_URL, PUBLISHABLE_KEY);
-
-    const PLAYER_ONE_NAME = "Dj Read";
-    const PLAYER_TWO_NAME = "Tvdb";
 
     const CHARACTERS = [
       "Bloodhound", "Gibraltar", "Lifeline", "Pathfinder", "Wraith", "Bangalore",
@@ -360,33 +666,27 @@
       "Hemlok Burst AR": "AR",
       "R-301 Carbine": "AR",
       "Nemesis Burst AR": "AR",
-
       "Alternator SMG": "SMG",
       "Prowler Burst PDW": "SMG",
       "R-99 SMG": "SMG",
       "Volt SMG": "SMG",
       "C.A.R. SMG": "SMG",
-
       "Devotion LMG": "LMG",
       "L-STAR EMG": "LMG",
       "M600 Spitfire": "LMG",
       "Rampage LMG": "LMG",
-
       "G7 Scout": "Marksman",
       "Triple Take": "Marksman",
       "30-30 Repeater": "Marksman",
       "Bocek Compound Bow": "Marksman",
-
       "Charge Rifle": "Sniper",
       "Longbow DMR": "Sniper",
       "Kraber .50-Cal Sniper": "Sniper",
       "Sentinel": "Sniper",
-
       "EVA-8 Auto": "Shotgun",
       "Mastiff Shotgun": "Shotgun",
       "Mozambique Shotgun": "Shotgun",
       "Peacekeeper": "Shotgun",
-
       "RE-45 Auto": "Pistol",
       "P2020": "Pistol",
       "Wingman": "Pistol"
@@ -398,12 +698,20 @@
       "Kraber .50-Cal Sniper"
     ];
 
-    const CHAOS_CHANCE = 0.05;
     const GROUND_GUNS = GUNS.filter(g => !CARE_PACKAGE.includes(g));
     const PISTOLS = GUNS.filter(g => WEAPON_CLASS[g] === "Pistol");
 
+    const PLAYER_ONE_NAME = "Dj Read";
+    const PLAYER_TWO_NAME = "Tvdb";
+
+    const imageCache = new Map();
     let appState = null;
     let isRolling = false;
+    let rollingInterval = null;
+    let soundEnabled = true;
+    let audioCtx = null;
+    let lastRenderedTimestamp = null;
+    let poolsVisible = false;
 
     function setStatus(text, isError = false) {
       const el = document.getElementById("statusText");
@@ -417,8 +725,7 @@
 
     function fmtTime(iso) {
       if (!iso) return "";
-      const d = new Date(iso);
-      return d.toLocaleString();
+      return new Date(iso).toLocaleString();
     }
 
     function deepClone(obj) {
@@ -432,6 +739,27 @@
         [copy[i], copy[j]] = [copy[j], copy[i]];
       }
       return copy;
+    }
+
+    function combinations(arr, k) {
+      const results = [];
+      const cur = [];
+
+      function walk(start) {
+        if (cur.length === k) {
+          results.push([...cur]);
+          return;
+        }
+        for (let i = start; i <= arr.length - (k - cur.length); i++) {
+          cur.push(arr[i]);
+          walk(i + 1);
+          cur.pop();
+        }
+      }
+
+      if (k <= 0 || k > arr.length) return results;
+      walk(0);
+      return results;
     }
 
     function sortedCombo(combo) {
@@ -450,28 +778,6 @@
     function overlaps(a, b) {
       const setA = new Set(a);
       return b.some(item => setA.has(item));
-    }
-
-    function combinations(arr, k) {
-      const results = [];
-      const current = [];
-
-      function walk(start) {
-        if (current.length === k) {
-          results.push([...current]);
-          return;
-        }
-
-        for (let i = start; i <= arr.length - (k - current.length); i++) {
-          current.push(arr[i]);
-          walk(i + 1);
-          current.pop();
-        }
-      }
-
-      if (k <= 0 || k > arr.length) return results;
-      walk(0);
-      return results;
     }
 
     function gunCountForLegend(legend) {
@@ -496,7 +802,7 @@
 
     function createInitialState() {
       return {
-        version: 1,
+        version: 2,
         lastUpdated: nowIso(),
         legendCycle: 1,
         gunCycle: 1,
@@ -512,56 +818,6 @@
       };
     }
 
-    function render(state) {
-      if (!state) return;
-
-      document.getElementById("legendCycleValue").textContent = state.legendCycle ?? "-";
-      document.getElementById("gunCycleValue").textContent = state.gunCycle ?? "-";
-      document.getElementById("legendsLeftValue").textContent = state.remainingLegends?.length ?? "-";
-      document.getElementById("gunsLeftValue").textContent = state.remainingGuns?.length ?? "-";
-      document.getElementById("updatedAtText").textContent = state.lastUpdated
-        ? `Last update: ${fmtTime(state.lastUpdated)}`
-        : "";
-
-      const roll = state.currentRoll;
-      const p1LegendEl = document.getElementById("p1Legend");
-      const p2LegendEl = document.getElementById("p2Legend");
-      const p1GunsEl = document.getElementById("p1Guns");
-      const p2GunsEl = document.getElementById("p2Guns");
-      const noticeList = document.getElementById("noticeList");
-      const chaosBanner = document.getElementById("chaosBanner");
-      const chaosText = document.getElementById("chaosText");
-
-      if (!roll) {
-        p1LegendEl.textContent = "Waiting...";
-        p2LegendEl.textContent = "Waiting...";
-        p1GunsEl.innerHTML = "";
-        p2GunsEl.innerHTML = "";
-        noticeList.innerHTML = `<div class="notice">No rolls yet.</div>`;
-        chaosBanner.classList.remove("show");
-        return;
-      }
-
-      p1LegendEl.textContent = roll.p1.legend;
-      p2LegendEl.textContent = roll.p2.legend;
-
-      p1GunsEl.innerHTML = roll.p1.guns.map(g => `<div class="gun-pill">${g}</div>`).join("");
-      p2GunsEl.innerHTML = roll.p2.guns.map(g => `<div class="gun-pill">${g}</div>`).join("");
-
-      const notices = roll.notices?.length ? roll.notices : ["Roll completed"];
-      noticeList.innerHTML = notices.map(n => `<div class="notice">${n}</div>`).join("");
-
-      if (roll.chaosMode === "swap") {
-        chaosBanner.classList.add("show");
-        chaosText.textContent = "Both players must swap guns";
-      } else if (roll.chaosMode === "pistol") {
-        chaosBanner.classList.add("show");
-        chaosText.textContent = "Pistol only";
-      } else {
-        chaosBanner.classList.remove("show");
-      }
-    }
-
     async function loadState() {
       const { data, error } = await supabaseClient
         .from("session")
@@ -575,10 +831,10 @@
       }
 
       if (!data || !data.roll || !data.roll.version) {
-        const state = createInitialState();
-        const ok = await saveState(state);
+        const fresh = createInitialState();
+        const ok = await saveState(fresh);
         if (!ok) return null;
-        return state;
+        return fresh;
       }
 
       return data.roll;
@@ -605,7 +861,6 @@
 
       for (const l1 of legends) {
         if (!isValidLegendForPlayer(l1, state.p1LastLegend)) continue;
-
         for (const l2 of legends) {
           if (l1 === l2) continue;
           if (!isValidLegendForPlayer(l2, state.p2LastLegend)) continue;
@@ -629,7 +884,6 @@
     function findStandardOption(state) {
       const gunPool = state.remainingGuns || [];
       const legendPairs = buildLegendPairs(state);
-
       if (!legendPairs.length) return null;
 
       const p1Combos2 = getValidCombos(gunPool, 2, state.p1LastGuns);
@@ -640,7 +894,6 @@
       for (const [legend1, legend2] of legendPairs) {
         const count1 = gunCountForLegend(legend1);
         const count2 = gunCountForLegend(legend2);
-
         if (gunPool.length < count1 + count2) continue;
 
         const c1List = count1 === 3 ? p1Combos3 : p1Combos2;
@@ -649,13 +902,7 @@
         for (const guns1 of c1List) {
           for (const guns2 of c2List) {
             if (!overlaps(guns1, guns2)) {
-              return {
-                legend1,
-                legend2,
-                guns1: [...guns1],
-                guns2: [...guns2],
-                chaosMode: null
-              };
+              return { legend1, legend2, guns1: [...guns1], guns2: [...guns2], chaosMode: null };
             }
           }
         }
@@ -668,9 +915,7 @@
       const count1 = gunCountForLegend(legend1);
       const count2 = gunCountForLegend(legend2);
 
-      if (count1 > PISTOLS.length || count2 > PISTOLS.length) {
-        return null;
-      }
+      if (count1 > PISTOLS.length || count2 > PISTOLS.length) return null;
 
       let p1Options = combinations(PISTOLS, count1);
       let p2Options = combinations(PISTOLS, count2);
@@ -696,9 +941,7 @@
     }
 
     function buildSwapChaosOption(state, standardOption) {
-      if (standardOption.guns1.length !== standardOption.guns2.length) {
-        return null;
-      }
+      if (standardOption.guns1.length !== standardOption.guns2.length) return null;
 
       const swapped1 = [...standardOption.guns2];
       const swapped2 = [...standardOption.guns1];
@@ -741,23 +984,13 @@
       state.remainingLegends = removeItems(state.remainingLegends, [option.legend1, option.legend2]);
       state.remainingGuns = removeItems(state.remainingGuns, [...new Set([...option.guns1, ...option.guns2])]);
 
-      if (option.chaosMode) {
-        state.chaosUsedThisGunCycle = true;
-      }
+      if (option.chaosMode) state.chaosUsedThisGunCycle = true;
 
       state.currentRoll = {
         timestamp: nowIso(),
         chaosMode: option.chaosMode || null,
-        p1: {
-          name: PLAYER_ONE_NAME,
-          legend: option.legend1,
-          guns: [...option.guns1]
-        },
-        p2: {
-          name: PLAYER_TWO_NAME,
-          legend: option.legend2,
-          guns: [...option.guns2]
-        },
+        p1: { name: PLAYER_ONE_NAME, legend: option.legend1, guns: [...option.guns1] },
+        p2: { name: PLAYER_TWO_NAME, legend: option.legend2, guns: [...option.guns2] },
         notices: [...notices]
       };
 
@@ -827,56 +1060,355 @@
       throw new Error("Could not generate a valid roll after multiple reset attempts.");
     }
 
+    function ensureAudio() {
+      if (!soundEnabled) return null;
+      if (!audioCtx) {
+        const Ctx = window.AudioContext || window.webkitAudioContext;
+        if (!Ctx) return null;
+        audioCtx = new Ctx();
+      }
+      return audioCtx;
+    }
+
+    function tone(freq = 440, duration = 0.08, type = "sine", gainValue = 0.03, delay = 0) {
+      const ctx = ensureAudio();
+      if (!ctx) return;
+      const start = ctx.currentTime + delay;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, start);
+      gain.gain.setValueAtTime(0.0001, start);
+      gain.gain.exponentialRampToValueAtTime(gainValue, start + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.start(start);
+      osc.stop(start + duration + 0.02);
+    }
+
+    function playRollTick() {
+      tone(580, 0.045, "square", 0.02);
+    }
+
+    function playRevealSound() {
+      tone(392, 0.09, "triangle", 0.03, 0);
+      tone(523, 0.12, "triangle", 0.028, 0.05);
+      tone(659, 0.15, "triangle", 0.026, 0.11);
+    }
+
+    function playChaosSound() {
+      tone(120, 0.25, "sawtooth", 0.035, 0);
+      tone(90, 0.35, "sawtooth", 0.03, 0.05);
+      tone(210, 0.18, "square", 0.02, 0.08);
+    }
+
+    function setPoolVisibility(show) {
+      poolsVisible = show;
+      document.getElementById("poolPanel").classList.toggle("show", show);
+      document.getElementById("togglePoolsBtn").classList.toggle("active", show);
+      document.getElementById("togglePoolsBtn").textContent = show ? "Hide Remaining Pools" : "Show Remaining Pools";
+    }
+
+    function renderPoolLists(state) {
+      const legendsEl = document.getElementById("remainingLegendsList");
+      const gunsEl = document.getElementById("remainingGunsList");
+
+      legendsEl.innerHTML = (state.remainingLegends || [])
+        .map(item => `<span class="pool-chip">${item}</span>`)
+        .join("");
+
+      gunsEl.innerHTML = (state.remainingGuns || [])
+        .map(item => `<span class="pool-chip">${item}</span>`)
+        .join("");
+
+      if (!state.remainingLegends?.length) {
+        legendsEl.innerHTML = `<span class="pool-chip">None</span>`;
+      }
+      if (!state.remainingGuns?.length) {
+        gunsEl.innerHTML = `<span class="pool-chip">None</span>`;
+      }
+    }
+
+    function renderWeaponRows(containerId, guns) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = guns.map((gun, idx) => `
+        <div class="weapon-row">
+          <div id="${containerId}_img_${idx}" class="weapon-thumb-wrap no-image">IMG</div>
+          <div>
+            <div class="weapon-name">${gun}</div>
+            <div class="weapon-class">${WEAPON_CLASS[gun] || "Weapon"}</div>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function setLegendImage(wrapperId, legendName, imageUrl) {
+      const wrap = document.getElementById(wrapperId);
+      if (!wrap) return;
+
+      if (imageUrl) {
+        wrap.innerHTML = `<img class="legend-image" src="${imageUrl}" alt="${legendName}">`;
+      } else {
+        wrap.innerHTML = `<div class="legend-fallback">${legendName}</div>`;
+      }
+    }
+
+    function setWeaponImage(holderId, gunName, imageUrl) {
+      const holder = document.getElementById(holderId);
+      if (!holder) return;
+
+      if (imageUrl) {
+        holder.classList.remove("no-image");
+        holder.innerHTML = `<img class="weapon-thumb" src="${imageUrl}" alt="${gunName}">`;
+      } else {
+        holder.classList.add("no-image");
+        holder.textContent = "IMG";
+      }
+    }
+
+    async function fetchWikiThumbnail(pageTitle, size = 600) {
+      const key = `${pageTitle}::${size}`;
+      if (imageCache.has(key)) return imageCache.get(key);
+
+      try {
+        const url =
+          `https://apexlegends.wiki.gg/api.php?action=query&format=json&prop=pageimages&pithumbsize=${size}&titles=${encodeURIComponent(pageTitle)}&origin=*`;
+
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        const pages = data?.query?.pages;
+        const firstPage = pages ? Object.values(pages)[0] : null;
+        const thumb = firstPage?.thumbnail?.source || null;
+        imageCache.set(key, thumb);
+        return thumb;
+      } catch {
+        imageCache.set(key, null);
+        return null;
+      }
+    }
+
+    async function hydrateImages(roll) {
+      if (!roll) return;
+
+      const [p1LegendImg, p2LegendImg] = await Promise.all([
+        fetchWikiThumbnail(roll.p1.legend, 700),
+        fetchWikiThumbnail(roll.p2.legend, 700)
+      ]);
+
+      setLegendImage("p1LegendWrap", roll.p1.legend, p1LegendImg);
+      setLegendImage("p2LegendWrap", roll.p2.legend, p2LegendImg);
+
+      const p1GunPromises = roll.p1.guns.map(g => fetchWikiThumbnail(g, 260));
+      const p2GunPromises = roll.p2.guns.map(g => fetchWikiThumbnail(g, 260));
+
+      const [p1GunImgs, p2GunImgs] = await Promise.all([
+        Promise.all(p1GunPromises),
+        Promise.all(p2GunPromises)
+      ]);
+
+      roll.p1.guns.forEach((gun, idx) => {
+        setWeaponImage(`p1Weapons_img_${idx}`, gun, p1GunImgs[idx]);
+      });
+
+      roll.p2.guns.forEach((gun, idx) => {
+        setWeaponImage(`p2Weapons_img_${idx}`, gun, p2GunImgs[idx]);
+      });
+    }
+
+    function triggerRevealEffects(roll) {
+      const p1Card = document.getElementById("p1Card");
+      const p2Card = document.getElementById("p2Card");
+      p1Card.classList.remove("reveal");
+      p2Card.classList.remove("reveal");
+
+      void p1Card.offsetWidth;
+      void p2Card.offsetWidth;
+
+      p1Card.classList.add("reveal");
+      p2Card.classList.add("reveal");
+
+      playRevealSound();
+
+      if (roll?.chaosMode) {
+        document.body.classList.remove("chaos-flash");
+        void document.body.offsetWidth;
+        document.body.classList.add("chaos-flash");
+        setTimeout(() => document.body.classList.remove("chaos-flash"), 850);
+        playChaosSound();
+      }
+    }
+
+    function render(state, isFreshReveal = false) {
+      if (!state) return;
+
+      document.getElementById("legendCycleValue").textContent = state.legendCycle ?? "-";
+      document.getElementById("gunCycleValue").textContent = state.gunCycle ?? "-";
+      document.getElementById("legendsLeftValue").textContent = state.remainingLegends?.length ?? "-";
+      document.getElementById("gunsLeftValue").textContent = state.remainingGuns?.length ?? "-";
+      document.getElementById("updatedAtText").textContent = state.lastUpdated ? `Last update: ${fmtTime(state.lastUpdated)}` : "";
+
+      renderPoolLists(state);
+
+      const roll = state.currentRoll;
+      const noticeList = document.getElementById("noticeList");
+      const chaosBanner = document.getElementById("chaosBanner");
+      const chaosText = document.getElementById("chaosText");
+
+      if (!roll) {
+        document.getElementById("p1Legend").textContent = "Waiting...";
+        document.getElementById("p2Legend").textContent = "Waiting...";
+        document.getElementById("p1Weapons").innerHTML = "";
+        document.getElementById("p2Weapons").innerHTML = "";
+        setLegendImage("p1LegendWrap", "Waiting...", null);
+        setLegendImage("p2LegendWrap", "Waiting...", null);
+        noticeList.innerHTML = `<div class="notice">No rolls yet.</div>`;
+        chaosBanner.classList.remove("show");
+        return;
+      }
+
+      document.getElementById("p1Legend").textContent = roll.p1.legend;
+      document.getElementById("p2Legend").textContent = roll.p2.legend;
+      renderWeaponRows("p1Weapons", roll.p1.guns);
+      renderWeaponRows("p2Weapons", roll.p2.guns);
+
+      const notices = roll.notices?.length ? roll.notices : ["Roll completed"];
+      noticeList.innerHTML = notices.map(n => `<div class="notice">${n}</div>`).join("");
+
+      if (roll.chaosMode === "swap") {
+        chaosBanner.classList.add("show");
+        chaosText.textContent = "Both players must swap guns";
+      } else if (roll.chaosMode === "pistol") {
+        chaosBanner.classList.add("show");
+        chaosText.textContent = "Pistol only";
+      } else {
+        chaosBanner.classList.remove("show");
+      }
+
+      hydrateImages(roll);
+
+      if (isFreshReveal) {
+        triggerRevealEffects(roll);
+      }
+    }
+
+    function startRollAnimation() {
+      clearInterval(rollingInterval);
+      const p1Card = document.getElementById("p1Card");
+      const p2Card = document.getElementById("p2Card");
+      p1Card.classList.add("rolling");
+      p2Card.classList.add("rolling");
+
+      const previewLegends = shuffle(CHARACTERS).slice(0, 12);
+      const previewGuns = shuffle(GROUND_GUNS).slice(0, 16);
+
+      let i = 0;
+      rollingInterval = setInterval(() => {
+        const p1Legend = previewLegends[i % previewLegends.length];
+        const p2Legend = previewLegends[(i + 3) % previewLegends.length];
+        const p1GunA = previewGuns[i % previewGuns.length];
+        const p1GunB = previewGuns[(i + 4) % previewGuns.length];
+        const p2GunA = previewGuns[(i + 7) % previewGuns.length];
+        const p2GunB = previewGuns[(i + 10) % previewGuns.length];
+
+        document.getElementById("p1Legend").textContent = p1Legend;
+        document.getElementById("p2Legend").textContent = p2Legend;
+
+        renderWeaponRows("p1Weapons", [p1GunA, p1GunB]);
+        renderWeaponRows("p2Weapons", [p2GunA, p2GunB]);
+
+        setLegendImage("p1LegendWrap", p1Legend, null);
+        setLegendImage("p2LegendWrap", p2Legend, null);
+
+        playRollTick();
+        i += 1;
+      }, 105);
+    }
+
+    function stopRollAnimation() {
+      clearInterval(rollingInterval);
+      rollingInterval = null;
+      document.getElementById("p1Card").classList.remove("rolling");
+      document.getElementById("p2Card").classList.remove("rolling");
+    }
+
     async function performRoll() {
       if (isRolling) return;
 
       isRolling = true;
-      document.getElementById("rollBtn").disabled = true;
+      const rollBtn = document.getElementById("rollBtn");
+      rollBtn.disabled = true;
+      rollBtn.textContent = "ROLLING...";
       setStatus("Rolling...");
+      startRollAnimation();
 
       try {
         const latest = await loadState();
         if (!latest) throw new Error("Could not load session state.");
+
+        await new Promise(r => setTimeout(r, 1050));
 
         const nextState = rollEngine(latest);
         const ok = await saveState(nextState);
         if (!ok) throw new Error("Could not save next session state.");
 
         appState = nextState;
-        render(appState);
+        stopRollAnimation();
+        render(appState, true);
         setStatus("Roll sent.");
       } catch (err) {
         console.error(err);
+        stopRollAnimation();
         setStatus(err.message || "Roll failed.", true);
       } finally {
         isRolling = false;
-        document.getElementById("rollBtn").disabled = false;
+        rollBtn.disabled = false;
+        rollBtn.textContent = "ROLL";
       }
     }
 
     async function resetAll() {
+      stopRollAnimation();
       const fresh = createInitialState();
       const ok = await saveState(fresh);
       if (ok) {
         appState = fresh;
-        render(appState);
+        render(appState, false);
         setStatus("Session reset.");
       }
     }
 
     async function boot() {
       setStatus("Connecting...");
-
       const state = await loadState();
       if (!state) return;
-
       appState = state;
-      render(appState);
+      lastRenderedTimestamp = state.lastUpdated || null;
+      render(appState, false);
       setStatus("Connected.");
     }
 
     document.getElementById("rollBtn").addEventListener("click", performRoll);
     document.getElementById("resetAllBtn").addEventListener("click", resetAll);
+
+    document.getElementById("togglePoolsBtn").addEventListener("click", () => {
+      setPoolVisibility(!poolsVisible);
+    });
+
+    document.getElementById("soundToggleBtn").addEventListener("click", () => {
+      soundEnabled = !soundEnabled;
+      const btn = document.getElementById("soundToggleBtn");
+      btn.classList.toggle("active", soundEnabled);
+      btn.textContent = soundEnabled ? "Sound On" : "Sound Off";
+      if (soundEnabled) {
+        ensureAudio();
+        playRevealSound();
+      }
+    });
 
     supabaseClient
       .channel("apex-duo-live-state")
@@ -886,14 +1418,17 @@
         (payload) => {
           if (payload.new && payload.new.roll) {
             appState = payload.new.roll;
-            render(appState);
+            stopRollAnimation();
+
+            const isFreshReveal = appState.lastUpdated && appState.lastUpdated !== lastRenderedTimestamp;
+            lastRenderedTimestamp = appState.lastUpdated || null;
+
+            render(appState, !!isFreshReveal);
             setStatus("Live update received.");
           }
         }
       )
-      .subscribe((status) => {
-        console.log("Realtime status:", status);
-      });
+      .subscribe();
 
     boot();
   </script>
