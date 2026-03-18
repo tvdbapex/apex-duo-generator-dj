@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Apex Duo Challenge</title>
   <link rel="icon" href="data:,">
-  <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=rlORTWpP7DNN4O11Z4VgReaVun2ovWjOwWmMmyso2ibYGUo9ZCjMyt_2NGaDFnETa5NRCWLQRNm1RBok_SBE-jMm1QydVgtzx7Hk6CzSrMHiYCSbQz-tvVpUm3e-C6vSDUf183iyjFdX865jDbX7hf2JT_sE3EU9s1ecdTc6lTteKj992kvFguFvzX0IVGTyELCPdEgKnkcJ6pcRJAhdXXOQ2erttiQgLKkRHsv_-v6tPZm7KVWLeRpG1T_hvPfHYYeW3TMUonnyTWTXGxCVRw" charset="UTF-8"></script><script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=imsg4hE1hlxexYIrSXS3IMN1GIPzcWrtYwYvhhokTSFBaINeR4MCQ6TYUAizAPQE-XfXAOn03tZa1qkDpcBOxzgOxcScJcvxqXbyWr19iugZ1o1CH2cm3gMVZFWzoac8RWuuorhLXBYW2hfu4T3VPtznaqiRpVTuZxrtGOnujBikek7WmSI5aD3O1OHU_svckZexdoW8fdgZ_5X8eMggOZMkdNRDK79Pc7-Q_hNoyn6OLU7DxfQyM8x5YS7Ez-yXqQbozvopQekGrxS51v7sjA" charset="UTF-8"></script><style>
+  <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=y9iXzvZshxLRL8k4SxzMjKkjd9gNNENEt-RKdybqknEg4Ga7-ymnLV3bDks0sxsPYE56GFCNmfjnaUTNxlomD6KcSS6apWHwKP-yxdHSQyLfUcRIKr_Z3C7Jn6qeLSUPAKdD2-IpU3Ox99Q98iw4Uz6EtnbAxhiu9sA7ttBj8FMVf5fbQd1yxIJxuBzr0at9qams-c4kT8qUxe7CigI3Emky1Px7t5nKFIXiFk2PkFxFVO69zOGvhg5139cuDbgRk7wEHBD5sl-ihw1EHnf7yg" charset="UTF-8"></script><script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=imsg4hE1hlxexYIrSXS3IMN1GIPzcWrtYwYvhhokTSFBaINeR4MCQ6TYUAizAPQE-XfXAOn03tZa1qkDpcBOxzgOxcScJcvxqXbyWr19iugZ1o1CH2cm3gMVZFWzoac8RWuuorhLXBYW2hfu4T3VPtznaqiRpVTuZxrtGOnujBikek7WmSI5aD3O1OHU_svckZexdoW8fdgZ_5X8eMggOZMkdNRDK79Pc7-Q_hNoyn6OLU7DxfQyM8x5YS7Ez-yXqQbozvopQekGrxS51v7sjA" charset="UTF-8"></script><style>
     :root{
       --bg:#070a0f;
       --bg2:#0b1119;
@@ -623,7 +623,7 @@
     .mobile-tabs{
       display:none;
       gap:10px;
-      margin-bottom:12px;
+      margin:0 0 10px;
     }
 
     .mobile-tab{
@@ -774,6 +774,11 @@
       </div>
     </div>
 
+    <div class="mobile-tabs" id="mobileTabs">
+      <button id="showDjBtn" class="mobile-tab active" disabled>DJ</button>
+      <button id="showTvdbBtn" class="mobile-tab" disabled>TVDB</button>
+    </div>
+
     <div class="secondary-row">
       <button id="togglePoolsBtn" class="pill-toggle">Show Remaining Pools</button>
       <button id="soundToggleBtn" class="pill-toggle active">Sound On</button>
@@ -792,25 +797,6 @@
           <div class="pool-title">Guns Left</div>
           <div id="remainingGunsList" class="pool-list"></div>
         </div>
-      </div>
-    </div>
-
-    <div class="statusbar">
-      <div class="stat">
-        <div class="stat-label">Legend Cycle</div>
-        <div class="stat-value" id="legendCycleValue">-</div>
-      </div>
-      <div class="stat">
-        <div class="stat-label">Gun Cycle</div>
-        <div class="stat-value" id="gunCycleValue">-</div>
-      </div>
-      <div class="stat">
-        <div class="stat-label">Legends Left</div>
-        <div class="stat-value" id="legendsLeftValue">-</div>
-      </div>
-      <div class="stat">
-        <div class="stat-label">Guns Left</div>
-        <div class="stat-value" id="gunsLeftValue">-</div>
       </div>
     </div>
 
@@ -836,10 +822,7 @@
           </div>
         </div>
       </div>
-      <div class="mobile-tabs" id="mobileTabs">
-        <button id="showDjBtn" class="mobile-tab active" disabled>DJ</button>
-        <button id="showTvdbBtn" class="mobile-tab" disabled>TVDB</button>
-      </div>
+  
     </div>
 
     <div class="main-grid">
@@ -875,6 +858,26 @@
         </div>
       </div>
     </div>
+
+    <div class="statusbar">
+      <div class="stat">
+        <div class="stat-label">Legend Cycle</div>
+        <div class="stat-value" id="legendCycleValue">-</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Gun Cycle</div>
+        <div class="stat-value" id="gunCycleValue">-</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Legends Left</div>
+        <div class="stat-value" id="legendsLeftValue">-</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Guns Left</div>
+        <div class="stat-value" id="gunsLeftValue">-</div>
+      </div>
+    </div>
+
 
     <div class="meta-grid">
       
