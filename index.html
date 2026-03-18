@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Apex Duo Challenge</title>
   <link rel="icon" href="data:,">
-  <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=l9aMcfyCC-v0ztBowvEDTdIuwX59Ayoxb_WO0d5dDKM9JjLUweSsmOas8VZrx7YW0XJwzFiURQkOYCG2N2cMHe6KpRHhHx6Di56gPViHs2mhUSgAHwNniPLuTssTL5FhdEjKKfUUi9Xm4D-a6Ifb27A_0YJhYQOv_2JbUVWvBTA9Km9vTdPeWl8iybgjFLjBSwof2QgxKlkkbKvKG1RqSpld681bLsjukcXFCKWXWq8XTZouiwd_1kf2pJ7fYyq5cKf9Ai-bve9Is19JJUNhuQ" charset="UTF-8"></script><style>
+  <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=-2nZdpxFIs5J6tF5m9GxryH2KKURkBPFWlELBTybVpz8bmdKzf48ZGDjOFqnJkhH3fBg0YMuRrdbME63cLWwFgGg-9BXbS9QxdWqUpuHoOz0Ls-juIugOiMxk3Tn7va8YvPaKAMByDDiURDiJm5BPmpewJr_QufuVM4D52gkngo52ye3c5VvGzoWPq1hKrXX_NH1jly3nqXVZOm4PgPDC5tBO37jcvtSdgsBFJX_YhaNYOnSmh1FxYZt2nh1rjfSrDN6NS_jJwQeb-3imnTykQ" charset="UTF-8"></script><style>
     :root{
       --bg:#070a0f;
       --bg2:#0b1119;
@@ -653,6 +653,10 @@
   </style>
 </head>
 <body>
+  <div id="appLoading" style="position:fixed;inset:0;background:#070a0f;color:#f6f8fb;display:flex;align-items:center;justify-content:center;flex-direction:column;z-index:99999;font-family:Arial,sans-serif;">
+    <div style="font-size:22px;font-weight:800;margin-bottom:10px;">Apex Duo Challenge</div>
+    <div id="appLoadingText" style="font-size:14px;color:#97a4b5;">Loading...</div>
+  </div>
   <div class="chaos-blast" id="chaosBlast"></div>
   <div class="joker-overlay" id="jokerOverlay"><div class="joker-card"><img src="assets/chaos/joker.png" alt="Joker Octane"><div class="joker-text">Gotcha.</div></div></div>
 
@@ -788,7 +792,7 @@
   </div>
 
   <script type="module">
-    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2?bundle";
 
     // =========================
     // SUPABASE SETTINGS
@@ -948,6 +952,11 @@
       joker: new Audio("assets/sounds/joker-laugh.mp3?v=1")
     };
 
+    sounds.bg.preload="none";
+    sounds.click.preload="none";
+    sounds.whoosh.preload="none";
+    sounds.explosion.preload="none";
+    sounds.joker.preload="none";
     sounds.bg.loop = true;
     sounds.bg.volume = 0.2;
     sounds.click.volume = 0.6;
@@ -1964,7 +1973,7 @@
       )
       .subscribe();
 
-    boot();
+    window.addEventListener("DOMContentLoaded", boot);
   </script>
 </body>
 </html>
