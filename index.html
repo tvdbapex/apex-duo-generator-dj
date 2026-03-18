@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Apex Duo Challenge</title>
   <link rel="icon" href="data:,">
-  <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=9F7lrPV6W1e_iHzZEJZbDM7UAdHj1AqwqnvBAniw_m145gDXcAQL2xhxKzgOkMooHgaJFzvXFyuWzDrsdCQQF8I8y99vmUt8fEwWJ7lQVTmrFZgBGHqpON2unCFbhkwii_9PbROPF4LflSuMedx-7njS827ebG5igvQMHAQID6AIx4HB8_aRiG7PGFOBEgHyXLr5My8dDYhQNAPw2y47go6XACtuTnHZ-rgSJRJONdZi2rPdDRXr83X09Keu231z3zymsYLwncvUMXa0HyqQ-w" charset="UTF-8"></script><style>
+  <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=J_Cxpjlvo0AqI5iZipkMZG3ly2umLrCp6qzeBZxb4xac8i_nT4nhQYH6Ncnvjtg_MUnt8_QuV8WMX5cIUza-jQ2Il0eHnI_0gcUlOlERtbpkprE9Kvr-QP93oFmR2rRFBNQSgd0FXBWljG99ayLywIYjqUEFCk59WJMDfLCWSnvj5t2OeEQNpWv87etKfW4Y1LAOOJrGHnNv6w3qLYoDVWO1BqDas1aOVIVipSq6YaeI_yFddVnwcMFz3IGu14iO7hN3bO5KM7ErttvJBYQCgA" charset="UTF-8"></script><style>
     :root{
       --bg:#070a0f;
       --bg2:#0b1119;
@@ -792,16 +792,7 @@
   </div>
 
   <script>
-(function(){
-  function failStart(message){
-    console.error(message);
-    const loadingText = document.getElementById("appLoadingText");
-    if (loadingText) loadingText.textContent = message;
-  }
 
-  function startApp(){
-
-    
     // =========================
     // SUPABASE SETTINGS
     // =========================
@@ -810,7 +801,44 @@
     const STATE_ROW_ID = 1;
     const CHAOS_CHANCE = 0.05;
 
-    const supabaseClient = window.supabase.createClient(PROJECT_URL, PUBLISHABLE_KEY);
+    const SUPABASE_HEADERS = {
+      "apikey": PUBLISHABLE_KEY,
+      "Authorization": `Bearer ${PUBLISHABLE_KEY}`
+    };
+
+    async function restGetState() {
+      const url = `${PROJECT_URL}/rest/v1/session?id=eq.${STATE_ROW_ID}&select=roll`;
+      const res = await fetch(url, {
+        headers: {
+          ...SUPABASE_HEADERS,
+          "Accept": "application/json"
+        }
+      });
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}`);
+      }
+      const rows = await res.json();
+      return rows && rows.length ? rows[0] : null;
+    }
+
+    async function restUpsertState(state) {
+      const url = `${PROJECT_URL}/rest/v1/session`;
+      const res = await fetch(url, {
+        method: "POST",
+        headers: {
+          ...SUPABASE_HEADERS,
+          "Content-Type": "application/json",
+          "Prefer": "resolution=merge-duplicates,return=minimal"
+        },
+        body: JSON.stringify({ id: STATE_ROW_ID, roll: state })
+      });
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}`);
+      }
+      return true;
+    }
+
+    let pollTimer = null;
 
     // =========================
     // GAME DATA
@@ -1201,40 +1229,33 @@
     }
 
     async function loadState() {
-      const { data, error } = await supabaseClient
-        .from("session")
-        .select("roll")
-        .eq("id", STATE_ROW_ID)
-        .maybeSingle();
+      try {
+        const row = await restGetState();
 
-      if (error) {
+        if (!row || !row.roll || !row.roll.version) {
+          const fresh = createInitialState();
+          const ok = await saveState(fresh);
+          if (!ok) return null;
+          return fresh;
+        }
+
+        return row.roll;
+      } catch (error) {
         setStatus(`Load failed: ${error.message}`, true);
         return null;
       }
-
-      if (!data || !data.roll || !data.roll.version) {
-        const fresh = createInitialState();
-        const ok = await saveState(fresh);
-        if (!ok) return null;
-        return fresh;
-      }
-
-      return data.roll;
     }
 
     async function saveState(state) {
       state.lastUpdated = nowIso();
 
-      const { error } = await supabaseClient
-        .from("session")
-        .upsert({ id: STATE_ROW_ID, roll: state });
-
-      if (error) {
+      try {
+        await restUpsertState(state);
+        return true;
+      } catch (error) {
         setStatus(`Save failed: ${error.message}`, true);
         return false;
       }
-
-      return true;
     }
 
     // =========================
@@ -1961,51 +1982,30 @@
     // =========================
     // REALTIME
     // =========================
-    supabaseClient
-      .channel("apex-duo-live-state")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "session" },
-        (payload) => {
-          if (payload.new && payload.new.roll) {
-            appState = payload.new.roll;
-            stopRollAnimation();
+    async function pollState() {
+      try {
+        const row = await restGetState();
+        if (!row || !row.roll) return;
 
-            const isFreshReveal = appState.lastUpdated && appState.lastUpdated !== lastRenderedTimestamp;
-            lastRenderedTimestamp = appState.lastUpdated || null;
+        const incoming = row.roll;
+        if (incoming.lastUpdated && incoming.lastUpdated !== lastRenderedTimestamp) {
+          appState = incoming;
+          stopRollAnimation();
 
-            render(appState, !!isFreshReveal);
-            setStatus("Live update received.");
-          }
+          const isFreshReveal = appState.lastUpdated !== lastRenderedTimestamp;
+          lastRenderedTimestamp = appState.lastUpdated || null;
+
+          render(appState, !!isFreshReveal);
+          setStatus("Live update received.");
         }
-      )
-      .subscribe();
+      } catch (_) {}
+    }
 
     if (document.readyState === "loading") {
       window.addEventListener("DOMContentLoaded", boot);
     } else {
       boot();
     }
-  
-  }
-
-  function loadSupabase(){
-    const s = document.createElement("script");
-    s.src = "https://unpkg.com/@supabase/supabase-js@2";
-    s.defer = true;
-    s.onload = () => {
-      if (!window.supabase || !window.supabase.createClient) {
-        failStart("Supabase failed to load.");
-        return;
-      }
-      startApp();
-    };
-    s.onerror = () => failStart("Could not load connection library.");
-    document.head.appendChild(s);
-  }
-
-  loadSupabase();
-})();
-</script>
+  </script>
 </body>
 </html>
