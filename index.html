@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Apex Duo Challenge</title>
   <link rel="icon" href="data:,">
-  <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=lFyYlZaz-RSqxjXEHHwQ11CR6fuRsHSDAX7TX2ZXVe7H9UJ1YcMHdEfw4a3UYHC0OLL3FDI7Pt-QLTFzgWfhS6XokCT9sdk39Fm1z0fpPqg-_AT8kErorfvP3n8iKHmDAO_IBzANCfHOvPh77ipCp40Q7w9mqJ393wcQsO-Tjrp3ZrhhWkIGe4UwNdB1Bekm__mKszXx4J6aGpOw93nX_OXmQcHFzfce0qaafcPSEMMEDpowjB0-dKeVPHFMBOxhHB1m2bHwROGcOQFSoef8VQ" charset="UTF-8"></script><script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=imsg4hE1hlxexYIrSXS3IMN1GIPzcWrtYwYvhhokTSFBaINeR4MCQ6TYUAizAPQE-XfXAOn03tZa1qkDpcBOxzgOxcScJcvxqXbyWr19iugZ1o1CH2cm3gMVZFWzoac8RWuuorhLXBYW2hfu4T3VPtznaqiRpVTuZxrtGOnujBikek7WmSI5aD3O1OHU_svckZexdoW8fdgZ_5X8eMggOZMkdNRDK79Pc7-Q_hNoyn6OLU7DxfQyM8x5YS7Ez-yXqQbozvopQekGrxS51v7sjA" charset="UTF-8"></script><style>
+  <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=rlORTWpP7DNN4O11Z4VgReaVun2ovWjOwWmMmyso2ibYGUo9ZCjMyt_2NGaDFnETa5NRCWLQRNm1RBok_SBE-jMm1QydVgtzx7Hk6CzSrMHiYCSbQz-tvVpUm3e-C6vSDUf183iyjFdX865jDbX7hf2JT_sE3EU9s1ecdTc6lTteKj992kvFguFvzX0IVGTyELCPdEgKnkcJ6pcRJAhdXXOQ2erttiQgLKkRHsv_-v6tPZm7KVWLeRpG1T_hvPfHYYeW3TMUonnyTWTXGxCVRw" charset="UTF-8"></script><script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=imsg4hE1hlxexYIrSXS3IMN1GIPzcWrtYwYvhhokTSFBaINeR4MCQ6TYUAizAPQE-XfXAOn03tZa1qkDpcBOxzgOxcScJcvxqXbyWr19iugZ1o1CH2cm3gMVZFWzoac8RWuuorhLXBYW2hfu4T3VPtznaqiRpVTuZxrtGOnujBikek7WmSI5aD3O1OHU_svckZexdoW8fdgZ_5X8eMggOZMkdNRDK79Pc7-Q_hNoyn6OLU7DxfQyM8x5YS7Ez-yXqQbozvopQekGrxS51v7sjA" charset="UTF-8"></script><style>
     :root{
       --bg:#070a0f;
       --bg2:#0b1119;
@@ -603,20 +603,43 @@
       100%{opacity:0}
     }
 
+    .mobile-reveal-wrap{
+      display:none;
+    }
+
+    .mobile-reveal-card{
+      position:relative;
+      overflow:hidden;
+      min-height:430px;
+      background:
+        radial-gradient(circle at 90% 10%, rgba(255,255,255,.06), transparent 25%),
+        linear-gradient(180deg, rgba(14,20,31,.96), rgba(18,28,42,.94));
+      border:1px solid var(--line);
+      border-radius:28px;
+      box-shadow:var(--glow);
+      margin-bottom:10px;
+    }
+
     .mobile-tabs{
       display:none;
       gap:10px;
-      margin:10px 0 16px;
+      margin-bottom:12px;
     }
 
     .mobile-tab{
       flex:1 1 0;
       min-width:0;
+      opacity:1;
     }
 
     .mobile-tab.active{
       border-color:rgba(255,106,43,.5);
       background:linear-gradient(180deg, rgba(255,106,43,.18), rgba(255,106,43,.06));
+    }
+
+    .mobile-tab:disabled{
+      opacity:.5;
+      cursor:default;
     }
 
 
@@ -629,21 +652,82 @@
 
     @media (max-width:720px){
       .wrap{padding:12px}
-      .topbar{margin-bottom:10px}
       .topbar > div:first-child{display:none}
-      .controls,.secondary-row{
+      .topbar{margin-bottom:10px}
+      .controls{
         width:100%;
         display:grid;
         grid-template-columns:1fr 1fr;
         gap:8px;
       }
-      .controls button,.secondary-row button{
+      .controls button{
         width:100%;
         min-width:0;
         padding:12px 10px;
         font-size:14px;
       }
       .primary{min-width:0;font-size:15px}
+      .secondary-row{
+        display:none;
+      }
+      .reveal-stage{
+        min-height:20px;
+        font-size:12px;
+        margin-bottom:8px;
+      }
+      .chaos-banner{
+        padding:12px 14px;
+        border-radius:16px;
+        margin-bottom:10px;
+      }
+      .chaos-title{font-size:22px}
+      .chaos-sub{font-size:13px}
+      .mobile-reveal-wrap{display:block}
+      .main-grid{display:none}
+      .mobile-reveal-card{
+        min-height:auto;
+        border-radius:20px;
+      }
+      .mobile-reveal-card .card-content{
+        grid-template-columns:1fr;
+        min-height:auto;
+      }
+      .mobile-reveal-card .card-left{
+        padding:14px 14px 10px;
+        gap:10px;
+      }
+      .mobile-reveal-card .player-card-name{font-size:12px}
+      .mobile-reveal-card .legend-name{
+        font-size:30px;
+        min-height:32px;
+      }
+      .mobile-reveal-card .weapons{gap:8px}
+      .mobile-reveal-card .weapon-row{
+        min-height:54px;
+        grid-template-columns:52px 1fr;
+        padding:8px 10px;
+      }
+      .mobile-reveal-card .weapon-thumb-wrap,.mobile-reveal-card .weapon-thumb{
+        width:40px;
+        height:40px;
+      }
+      .mobile-reveal-card .weapon-name{font-size:16px}
+      .mobile-reveal-card .weapon-class{font-size:10px}
+      .mobile-reveal-card .card-right{
+        min-height:180px;
+        padding:8px 12px 12px;
+      }
+      .mobile-reveal-card .legend-image{
+        max-width:260px;
+        max-height:180px;
+      }
+      .mobile-reveal-card .legend-fallback{
+        width:100%;
+        max-width:220px;
+        border-radius:18px;
+        font-size:18px;
+      }
+      .mobile-tabs{display:flex}
       .statusbar{
         grid-template-columns:1fr 1fr;
         gap:8px;
@@ -655,69 +739,6 @@
       }
       .stat-label{font-size:11px;margin-bottom:8px}
       .stat-value{font-size:28px}
-      .reveal-stage{
-        min-height:22px;
-        font-size:12px;
-        margin-bottom:8px;
-      }
-      .chaos-banner{
-        padding:12px 14px;
-        border-radius:16px;
-        margin-bottom:10px;
-      }
-      .chaos-title{font-size:22px}
-      .chaos-sub{font-size:13px}
-      .main-grid{
-        display:block;
-        margin-bottom:10px;
-      }
-      .player-card{
-        min-height:auto;
-        border-radius:20px;
-      }
-      .card-content{
-        grid-template-columns:1fr;
-        min-height:auto;
-      }
-      .card-left{
-        padding:14px 14px 10px;
-        gap:10px;
-      }
-      .player-card-name{font-size:12px}
-      .legend-name{
-        font-size:30px;
-        min-height:32px;
-      }
-      .weapons{gap:8px}
-      .weapon-row{
-        min-height:54px;
-        grid-template-columns:52px 1fr;
-        padding:8px 10px;
-      }
-      .weapon-thumb-wrap,.weapon-thumb{
-        width:40px;
-        height:40px;
-      }
-      .weapon-name{font-size:16px}
-      .weapon-class{font-size:10px}
-      .card-right{
-        min-height:180px;
-        padding:8px 12px 12px;
-      }
-      .legend-image{
-        max-width:260px;
-        max-height:180px;
-      }
-      .legend-fallback{
-        width:100%;
-        max-width:220px;
-        border-radius:18px;
-        font-size:18px;
-      }
-      #p2Card.mobile-hidden,#p1Card.mobile-hidden{display:none}
-      .mobile-tabs{
-        display:flex;
-      }
       .meta-grid{
         grid-template-columns:1fr;
         gap:10px;
@@ -731,26 +752,8 @@
         font-size:16px;
       }
       .pool-grid{grid-template-columns:1fr;gap:10px}
-      .pool-box{
-        min-height:auto;
-        padding:12px;
-      }
+      .pool-box{min-height:auto;padding:12px}
       .footer-note{margin-top:8px;font-size:11px}
-      #soundToggleBtn{
-        font-size:0;
-        position:relative;
-      }
-      #soundToggleBtn::before{
-        content:"🔊";
-        font-size:18px;
-      }
-      #soundToggleBtn.muted::before{
-        content:"🔇";
-      }
-      #togglePoolsBtn{
-        text-transform:uppercase;
-      }
-      #togglePoolsBtn span.label-full{display:none}
     }
   </style>
 </head>
@@ -772,7 +775,7 @@
     </div>
 
     <div class="secondary-row">
-      <button id="togglePoolsBtn" class="pill-toggle"><span class="label-full">Show Remaining Pools</span>Pool</button>
+      <button id="togglePoolsBtn" class="pill-toggle">Show Remaining Pools</button>
       <button id="soundToggleBtn" class="pill-toggle active">Sound On</button>
     </div>
 
@@ -816,6 +819,29 @@
       <div id="chaosText" class="chaos-sub">-</div>
     </div>
 
+
+    <div class="mobile-reveal-wrap" id="mobileRevealWrap">
+      <div class="mobile-reveal-card" id="mobileRevealCard">
+        <div class="card-content">
+          <div class="card-left">
+            <div class="player-card-name" id="mobilePlayerName">DJ READ</div>
+            <div id="mobileLegend" class="legend-name">Waiting...</div>
+            <div id="mobileWeapons" class="weapons"></div>
+          </div>
+          <div class="card-right">
+            <div id="mobileLegendWrap" class="legend-image-wrap">
+              <div class="legend-fallback">Waiting...</div>
+            </div>
+            <div class="overlay-line"></div>
+          </div>
+        </div>
+      </div>
+      <div class="mobile-tabs" id="mobileTabs">
+        <button id="showDjBtn" class="mobile-tab active" disabled>DJ</button>
+        <button id="showTvdbBtn" class="mobile-tab" disabled>TVDB</button>
+      </div>
+    </div>
+
     <div class="main-grid">
       <div id="p1Card" class="player-card">
         <div class="card-content">
@@ -848,11 +874,6 @@
           </div>
         </div>
       </div>
-    </div>
-
-    <div class="mobile-tabs" id="mobileTabs">
-      <button id="showDjBtn" class="mobile-tab active">DJ</button>
-      <button id="showTvdbBtn" class="mobile-tab">TVDB</button>
     </div>
 
     <div class="meta-grid">
@@ -1607,6 +1628,11 @@
       if (!roll) {
         clearCard("p1");
         clearCard("p2");
+        document.getElementById("mobilePlayerName").textContent = "DJ READ";
+        document.getElementById("mobileLegend").textContent = "Waiting...";
+        document.getElementById("mobileWeapons").innerHTML = "";
+        document.getElementById("mobileLegendWrap").innerHTML = `<div class="legend-fallback">Waiting...</div>`;
+        setMobileTabState(false);
         document.getElementById("revealStage").textContent = "";
         noticeList.innerHTML = `<div class="notice">No rolls yet.</div>`;
         chaosBanner.classList.remove("show");
@@ -1783,6 +1809,46 @@
       } else {
         document.getElementById("revealStage").textContent = "Loadouts locked";
       }
+
+      if (isMobileView()) {
+        renderMobileCard("p1", roll.p1);
+      }
+      setMobileTabState(true);
+    }
+
+
+    let mobileActiveView = "p1";
+    let mobileTabsEnabled = false;
+
+    function isMobileView() {
+      return window.innerWidth <= 720;
+    }
+
+    function setMobileTabState(enabled) {
+      mobileTabsEnabled = enabled;
+      const djBtn = document.getElementById("showDjBtn");
+      const tvdbBtn = document.getElementById("showTvdbBtn");
+      djBtn.disabled = !enabled;
+      tvdbBtn.disabled = !enabled;
+    }
+
+    function renderMobileCard(sideKey, rollSide) {
+      document.getElementById("mobilePlayerName").textContent = sideKey === "p1" ? "DJ READ" : "TVDB";
+      document.getElementById("mobileLegend").textContent = rollSide.legend;
+      renderWeaponRows("mobileWeapons", rollSide.guns);
+      setLegendImage("mobileLegendWrap", rollSide.legend);
+      rollSide.guns.forEach((gun, idx) => {
+        setWeaponImage(`mobileWeapons_img_${idx}`, gun);
+      });
+      mobileActiveView = sideKey;
+      document.getElementById("showDjBtn").classList.toggle("active", sideKey === "p1");
+      document.getElementById("showTvdbBtn").classList.toggle("active", sideKey === "p2");
+    }
+
+    function showMobileView(sideKey) {
+      if (!mobileTabsEnabled || !appState || !appState.currentRoll) return;
+      const roll = appState.currentRoll;
+      renderMobileCard(sideKey, sideKey === "p1" ? roll.p1 : roll.p2);
     }
 
     // =========================
@@ -1863,7 +1929,6 @@
       soundEnabled = !soundEnabled;
       const btn = document.getElementById("soundToggleBtn");
       btn.classList.toggle("active", soundEnabled);
-      btn.classList.toggle("muted", !soundEnabled);
       btn.textContent = soundEnabled ? "Sound On" : "Sound Off";
 
       if (soundEnabled) {
@@ -1874,41 +1939,9 @@
       }
     });
 
-    function setMobileCardView(side) {
-      const p1 = document.getElementById("p1Card");
-      const p2 = document.getElementById("p2Card");
-      const dj = document.getElementById("showDjBtn");
-      const tv = document.getElementById("showTvdbBtn");
+    document.getElementById("showDjBtn").addEventListener("click", () => showMobileView("p1"));
+    document.getElementById("showTvdbBtn").addEventListener("click", () => showMobileView("p2"));
 
-      if (window.innerWidth > 720) {
-        p1.classList.remove("mobile-hidden");
-        p2.classList.remove("mobile-hidden");
-        if (dj) dj.classList.remove("active");
-        if (tv) tv.classList.remove("active");
-        return;
-      }
-
-      if (side === "p1") {
-        p1.classList.remove("mobile-hidden");
-        p2.classList.add("mobile-hidden");
-        dj.classList.add("active");
-        tv.classList.remove("active");
-      } else {
-        p2.classList.remove("mobile-hidden");
-        p1.classList.add("mobile-hidden");
-        tv.classList.add("active");
-        dj.classList.remove("active");
-      }
-    }
-
-    document.getElementById("showDjBtn").addEventListener("click", () => setMobileCardView("p1"));
-    document.getElementById("showTvdbBtn").addEventListener("click", () => setMobileCardView("p2"));
-
-    window.addEventListener("resize", () => {
-      if (window.innerWidth > 720) {
-        setMobileCardView("p1");
-      }
-    });
 
     // =========================
     // REALTIME
@@ -1933,7 +1966,6 @@
       )
       .subscribe();
 
-    setMobileCardView("p1");
     boot();
   </script>
 </body>
