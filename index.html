@@ -4,9 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Apex Duo Challenge</title>
-  <meta name="theme-color" content="#070a0f">
   <link rel="icon" href="data:,">
-  <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=p5yKYVniKSbcnUPm86mtd6QpMi4qvDYwCq5g0_UOff2Vvgma5d_X4jb2FT59oomP98EaRZO841NdqcDgVTAaTHG9g25nAxYRaa6Gs5HSMCxjLt-HjTJgLYe1oYSzS-io-NRYBzufW-1mo-KGOYrFkptLZTvBBXBqULpRSukN8rVmGyhbQsWgxywsRyOUWTPMHp4DyP1ngCDunSJpIzUvQe2kwb7bR_9HrzH09SjcSWGe4Km00j3svhnqdEJjgv5MBUtkRy5badXKWK92TOtfSg" charset="UTF-8"></script><style>
+  <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=l9aMcfyCC-v0ztBowvEDTdIuwX59Ayoxb_WO0d5dDKM9JjLUweSsmOas8VZrx7YW0XJwzFiURQkOYCG2N2cMHe6KpRHhHx6Di56gPViHs2mhUSgAHwNniPLuTssTL5FhdEjKKfUUi9Xm4D-a6Ifb27A_0YJhYQOv_2JbUVWvBTA9Km9vTdPeWl8iybgjFLjBSwof2QgxKlkkbKvKG1RqSpld681bLsjukcXFCKWXWq8XTZouiwd_1kf2pJ7fYyq5cKf9Ai-bve9Is19JJUNhuQ" charset="UTF-8"></script><style>
     :root{
       --bg:#070a0f;
       --bg2:#0b1119;
@@ -605,7 +604,16 @@
     }
 
 
-    @media (max-width:1080px){
+    
+    .mobile-pager{display:none; margin-bottom:16px;}
+    .mobile-tabs{display:flex; gap:8px; margin-bottom:10px;}
+    .mobile-tab{flex:1; padding:12px 14px; border-radius:14px; border:1px solid var(--line); background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)); color:var(--text); font-weight:800;}
+    .mobile-tab.active{border-color:rgba(255,106,43,.5); background:linear-gradient(180deg, rgba(255,106,43,.18), rgba(255,106,43,.06));}
+    .mobile-card{min-height:52vh;}
+    .mobile-card .card-content{grid-template-columns:1fr; min-height:52vh;}
+    .mobile-card .card-right{min-height:220px;}
+
+@media (max-width:1080px){
       .statusbar,.main-grid,.meta-grid,.pool-grid{grid-template-columns:1fr}
       .card-content{grid-template-columns:1fr}
       .card-right{min-height:280px}
@@ -613,63 +621,38 @@
     }
 
     @media (max-width:720px){
-      .wrap{padding:14px}
-      h1{font-size:42px}
+      .wrap{padding:12px}
+      h1{font-size:20px; text-align:center}
+      .subtitle{font-size:12px; text-align:center; margin-top:6px}
+      .topbar{gap:10px; margin-bottom:12px}
+      .topbar > div:first-child{width:100%}
+      .controls,.secondary-row{width:100%; display:grid; grid-template-columns:1fr 1fr; gap:10px}
+      .controls button,.secondary-row button{width:100%; min-width:0; padding:12px 10px; font-size:16px}
+      .statusbar{grid-template-columns:1fr 1fr; gap:10px; margin:12px 0}
+      .stat{padding:14px}
+      .stat-value{font-size:28px}
+      .main-grid{display:none}
+      .mobile-pager{display:block}
+      .meta-grid{display:none}
+      .pool-panel{position:fixed; inset:110px 12px 12px; overflow:auto; z-index:9500; background:rgba(7,10,15,.96)}
+      .pool-grid{grid-template-columns:1fr}
       .legend-name{font-size:34px;min-height:38px}
       .weapon-name{font-size:18px}
-      .stat-value{font-size:34px}
-      .controls,.secondary-row{width:100%}
-      .controls button,.secondary-row button{flex:1 1 auto}
+      .mobile-card .legend-name{font-size:30px; min-height:32px}
+      .mobile-card .weapon-row{min-height:58px; padding:9px 10px}
+      .mobile-card .card-left{padding:18px 16px 12px}
+      .mobile-card .card-right{padding:10px; min-height:180px}
+      .mobile-card .legend-image{max-width:300px}
+      .reveal-stage{min-height:24px; font-size:12px; margin-bottom:8px}
+      .chaos-banner{margin-bottom:10px; padding:14px 16px}
+      .chaos-title{font-size:22px}
+      .chaos-sub{font-size:14px}
+      .joker-card img{max-width:220px !important}
+      .joker-text{font-size:18px !important}
     }
-  
-/* =========================
-   MOBILE OPTIMIZATION
-========================= */
-@media (max-width: 768px) {
-  body { padding: 10px; }
-
-  h1 { font-size: 22px !important; text-align: center; }
-
-  .controls { flex-direction: column !important; gap: 10px !important; }
-
-  button {
-    width: 100% !important;
-    height: 50px !important;
-    font-size: 16px !important;
-  }
-
-  .cards { flex-direction: column !important; gap: 16px !important; }
-
-  .card { width: 100% !important; padding: 12px !important; }
-
-  .legend-img { height: 120px !important; object-fit: contain; }
-
-  .weapon-row img { height: 40px !important; }
-
-  .chaos-banner { font-size: 18px !important; padding: 10px !important; }
-
-  #jokerOverlay img { width: 180px !important; }
-}
-
-@media (max-width: 480px) {
-  h1 { font-size: 18px !important; }
-
-  .legend-img { height: 90px !important; }
-
-  .weapon-row img { height: 32px !important; }
-
-  button { height: 44px !important; font-size: 14px !important; }
-
-  #jokerOverlay img { width: 140px !important; }
-}
-
-</style>
+  </style>
 </head>
 <body>
-  <div id="appLoading" style="position:fixed;inset:0;background:#070a0f;color:#f6f8fb;display:flex;align-items:center;justify-content:center;flex-direction:column;z-index:99999;font-family:Arial,sans-serif;">
-    <div style="font-size:22px;font-weight:800;margin-bottom:10px;">Apex Duo Challenge</div>
-    <div style="font-size:14px;color:#97a4b5;">Loading...</div>
-  </div>
   <div class="chaos-blast" id="chaosBlast"></div>
   <div class="joker-overlay" id="jokerOverlay"><div class="joker-card"><img src="assets/chaos/joker.png" alt="Joker Octane"><div class="joker-text">Gotcha.</div></div></div>
 
@@ -757,6 +740,28 @@
           </div>
           <div class="card-right">
             <div id="p2LegendWrap" class="legend-image-wrap">
+              <div class="legend-fallback">Waiting...</div>
+            </div>
+            <div class="overlay-line"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mobile-pager" id="mobilePager">
+      <div class="mobile-tabs">
+        <button id="mobileTabP1" class="mobile-tab active">DJ</button>
+        <button id="mobileTabP2" class="mobile-tab">TVDB</button>
+      </div>
+      <div id="mobileCard" class="player-card mobile-card">
+        <div class="card-content">
+          <div class="card-left">
+            <div id="mobilePlayerName" class="player-card-name">Dj Read</div>
+            <div id="mobileLegend" class="legend-name">Waiting...</div>
+            <div id="mobileWeapons" class="weapons"></div>
+          </div>
+          <div class="card-right">
+            <div id="mobileLegendWrap" class="legend-image-wrap">
               <div class="legend-fallback">Waiting...</div>
             </div>
             <div class="overlay-line"></div>
@@ -928,6 +933,9 @@
     let audioStarted = false;
     let lastRenderedTimestamp = null;
     let poolsVisible = false;
+    let mobileActiveTab = "p1";
+    let mobileNavEnabled = true;
+    let mobileTouchStartX = null;
     let appState = null;
     let isRolling = false;
     let rollingInterval = null;
@@ -940,16 +948,11 @@
       joker: new Audio("assets/sounds/joker-laugh.mp3?v=1")
     };
 
-    sounds.bg.preload = "none";
-    sounds.click.preload = "none";
-    sounds.whoosh.preload = "none";
-    sounds.explosion.preload = "none";
-
     sounds.bg.loop = true;
-    sounds.bg.volume = 0.16;
-    sounds.click.volume = 0.55;
-    sounds.whoosh.volume = 0.65;
-    sounds.explosion.volume = 0.85;
+    sounds.bg.volume = 0.2;
+    sounds.click.volume = 0.6;
+    sounds.whoosh.volume = 0.7;
+    sounds.explosion.volume = 0.9;
     sounds.joker.volume = 0.85;
 
     async function startAudioIfNeeded() {
@@ -1069,7 +1072,7 @@
       }, 1350);
     }
 
-    document.addEventListener("pointerdown", startAudioIfNeeded, { once: true });
+    document.addEventListener("click", startAudioIfNeeded, { once: true });
 
     // =========================
     // HELPERS
@@ -1426,6 +1429,56 @@
     // =========================
     // RENDERING / UI
     // =========================
+    function isMobileView() {
+      return window.innerWidth <= 720;
+    }
+
+    function updateResponsiveLabels() {
+      const poolBtn = document.getElementById("togglePoolsBtn");
+      const soundBtn = document.getElementById("soundToggleBtn");
+      if (isMobileView()) {
+        poolBtn.textContent = poolsVisible ? "Close" : "Pool";
+        soundBtn.textContent = soundEnabled ? "🔊" : "🔇";
+      } else {
+        poolBtn.textContent = poolsVisible ? "Hide Remaining Pools" : "Show Remaining Pools";
+        soundBtn.textContent = soundEnabled ? "Sound On" : "Sound Off";
+      }
+    }
+
+    function setMobileTab(tab, rerender = true) {
+      mobileActiveTab = tab;
+      document.getElementById("mobileTabP1").classList.toggle("active", tab === "p1");
+      document.getElementById("mobileTabP2").classList.toggle("active", tab === "p2");
+      if (rerender && appState && appState.currentRoll) renderMobileSnapshot(appState.currentRoll);
+    }
+
+    function clearMobileCard(text = "Waiting...") {
+      document.getElementById("mobilePlayerName").textContent = mobileActiveTab === "p1" ? "Dj Read" : "Tvdb";
+      document.getElementById("mobileLegend").textContent = text;
+      document.getElementById("mobileWeapons").innerHTML = "";
+      document.getElementById("mobileLegendWrap").innerHTML = `<div class="legend-fallback">${text}</div>`;
+    }
+
+    function renderMobileCardData(playerName, legendName, guns) {
+      document.getElementById("mobilePlayerName").textContent = playerName;
+      document.getElementById("mobileLegend").textContent = legendName;
+      renderWeaponRows("mobileWeapons", guns);
+      setLegendImage("mobileLegendWrap", legendName);
+      guns.forEach((gun, idx) => setWeaponImage(`mobileWeapons_img_${idx}`, gun));
+    }
+
+    function renderMobileSnapshot(roll, usePreview = false) {
+      if (!roll) { clearMobileCard(); return; }
+      const isP1 = mobileActiveTab === "p1";
+      const side = isP1 ? roll.p1 : roll.p2;
+      let guns = side.guns;
+      if (usePreview) {
+        const preview = isP1 ? roll.previewP1Guns : roll.previewP2Guns;
+        if (preview && preview.length) guns = preview;
+      }
+      renderMobileCardData(side.name, side.legend, guns);
+    }
+
     function renderPoolLists(state) {
       const legendsEl = document.getElementById("remainingLegendsList");
       const gunsEl = document.getElementById("remainingGunsList");
@@ -1461,7 +1514,7 @@
 
       wrap.innerHTML = `
         <img
-          class="legend-image glow" decoding="async"
+          class="legend-image glow"
           src="assets/legends/${file}"
           alt="${legendName}"
           onerror="this.parentElement.innerHTML='<div class=&quot;legend-fallback&quot;>${legendName}</div>'"
@@ -1480,7 +1533,7 @@
 
       holder.innerHTML = `
         <img
-          class="weapon-thumb" decoding="async"
+          class="weapon-thumb"
           src="assets/weapons/${file}"
           alt="${gunName}"
           onerror="this.parentElement.textContent='IMG'"
@@ -1504,11 +1557,7 @@
     }
 
     function render(state, animated = false) {
-      if (!state) {
-        const loadingEl = document.getElementById("appLoading");
-        if (loadingEl) loadingEl.innerHTML = '<div style="font-size:18px;font-weight:800;margin-bottom:8px;">Load failed</div><div style="font-size:13px;color:#97a4b5;">Try refreshing or opening again.</div>';
-        return;
-      }
+      if (!state) return;
 
       document.getElementById("legendCycleValue").textContent = state.legendCycle ?? "-";
       document.getElementById("gunCycleValue").textContent = state.gunCycle ?? "-";
@@ -1526,6 +1575,7 @@
       if (!roll) {
         clearCard("p1");
         clearCard("p2");
+        clearMobileCard();
         document.getElementById("revealStage").textContent = "";
         noticeList.innerHTML = `<div class="notice">No rolls yet.</div>`;
         chaosBanner.classList.remove("show");
@@ -1543,7 +1593,11 @@
 
       if (animated) {
         chaosBanner.classList.remove("show");
-        revealSequence(roll);
+        if (isMobileView()) {
+          revealSequenceMobile(roll);
+        } else {
+          revealSequence(roll);
+        }
       } else {
         if (roll.chaosMode === "swap" || roll.chaosMode === "pistol") {
           chaosBanner.classList.add("show");
@@ -1601,6 +1655,73 @@
       rollingInterval = null;
       document.getElementById("p1Card").classList.remove("rolling");
       document.getElementById("p2Card").classList.remove("rolling");
+    }
+
+    async function revealSequenceMobile(roll) {
+      mobileNavEnabled = false;
+      setMobileTab("p1", false);
+      clearMobileCard("...");
+
+      document.getElementById("revealStage").textContent = "Incoming: Dj Read";
+      await new Promise(r => setTimeout(r, 420));
+
+      setMobileTab("p1", false);
+      if (roll.chaosMode && roll.previewP1Guns) {
+        renderMobileCardData("Dj Read", roll.p1.legend, roll.previewP1Guns);
+      } else {
+        renderMobileCardData("Dj Read", roll.p1.legend, roll.p1.guns);
+      }
+      playRevealHit();
+
+      document.getElementById("revealStage").textContent = `${roll.p1.legend} locked in`;
+      await new Promise(r => setTimeout(r, 700));
+
+      document.getElementById("revealStage").textContent = "Incoming: Tvdb";
+      await new Promise(r => setTimeout(r, 320));
+
+      setMobileTab("p2", false);
+      if (roll.chaosMode && roll.previewP2Guns) {
+        renderMobileCardData("Tvdb", roll.p2.legend, roll.previewP2Guns);
+      } else {
+        renderMobileCardData("Tvdb", roll.p2.legend, roll.p2.guns);
+      }
+      playRevealHit();
+
+      document.getElementById("revealStage").textContent = `${roll.p2.legend} locked in`;
+      await new Promise(r => setTimeout(r, 420));
+
+      if (roll.chaosMode) {
+        if (roll.chaosMode === "swap") {
+          document.getElementById("chaosText").textContent = "Both players must swap guns";
+        } else {
+          document.getElementById("chaosText").textContent = "Pistol only";
+        }
+
+        document.getElementById("revealStage").textContent = "....";
+        await new Promise(r => setTimeout(r, 420));
+        document.getElementById("revealStage").textContent = "Wait for it...";
+        await new Promise(r => setTimeout(r, 320));
+
+        if (roll.chaosMode === "swap") {
+          triggerJokerChaosImpact();
+          document.getElementById("revealStage").textContent = "CHAOS: Swap Weapons";
+          await new Promise(r => setTimeout(r, 820));
+          renderMobileSnapshot(roll, false);
+        } else {
+          triggerChaosImpact();
+          document.getElementById("revealStage").textContent = "CHAOS: Pistols Only";
+          await new Promise(r => setTimeout(r, 520));
+          renderMobileSnapshot(roll, true);
+          await new Promise(r => setTimeout(r, 1000));
+          renderMobileSnapshot(roll, false);
+        }
+      } else {
+        document.getElementById("revealStage").textContent = "Loadouts locked";
+      }
+
+      mobileNavEnabled = true;
+      setMobileTab("p1", false);
+      renderMobileSnapshot(roll);
     }
 
     async function revealSequence(roll) {
@@ -1758,22 +1879,17 @@
       poolsVisible = show;
       document.getElementById("poolPanel").classList.toggle("show", show);
       document.getElementById("togglePoolsBtn").classList.toggle("active", show);
-      document.getElementById("togglePoolsBtn").textContent = show ? "Hide Remaining Pools" : "Show Remaining Pools";
+      updateResponsiveLabels();
     }
 
     async function boot() {
       setStatus("Connecting...");
       const state = await loadState();
-      if (!state) {
-        const loadingEl = document.getElementById("appLoading");
-        if (loadingEl) loadingEl.innerHTML = '<div style="font-size:18px;font-weight:800;margin-bottom:8px;">Load failed</div><div style="font-size:13px;color:#97a4b5;">Try refreshing or opening again.</div>';
-        return;
-      }
+      if (!state) return;
       appState = state;
       lastRenderedTimestamp = state.lastUpdated || null;
       render(appState, false);
-      const loadingEl = document.getElementById("appLoading");
-      if (loadingEl) loadingEl.remove();
+      updateResponsiveLabels();
       setStatus("Connected.");
     }
 
@@ -1788,7 +1904,7 @@
       soundEnabled = !soundEnabled;
       const btn = document.getElementById("soundToggleBtn");
       btn.classList.toggle("active", soundEnabled);
-      btn.textContent = soundEnabled ? "Sound On" : "Sound Off";
+      updateResponsiveLabels();
 
       if (soundEnabled) {
         await startAudioIfNeeded();
@@ -1797,6 +1913,33 @@
         sounds.bg.pause();
       }
     });
+
+
+    document.getElementById("mobileTabP1").addEventListener("click", () => {
+      if (!mobileNavEnabled) return;
+      setMobileTab("p1");
+    });
+
+    document.getElementById("mobileTabP2").addEventListener("click", () => {
+      if (!mobileNavEnabled) return;
+      setMobileTab("p2");
+    });
+
+    const mobileCardEl = document.getElementById("mobileCard");
+    mobileCardEl.addEventListener("touchstart", (e) => {
+      if (!mobileNavEnabled || !isMobileView()) return;
+      mobileTouchStartX = e.changedTouches[0].clientX;
+    }, {passive:true});
+
+    mobileCardEl.addEventListener("touchend", (e) => {
+      if (!mobileNavEnabled || !isMobileView() || mobileTouchStartX === null) return;
+      const dx = e.changedTouches[0].clientX - mobileTouchStartX;
+      mobileTouchStartX = null;
+      if (Math.abs(dx) < 40) return;
+      setMobileTab(dx < 0 ? "p2" : "p1");
+    }, {passive:true});
+
+    window.addEventListener("resize", updateResponsiveLabels);
 
     // =========================
     // REALTIME
@@ -1821,7 +1964,7 @@
       )
       .subscribe();
 
-    window.addEventListener("DOMContentLoaded", boot);
+    boot();
   </script>
 </body>
 </html>
