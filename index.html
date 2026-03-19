@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Apex Duo Challenge</title>
   <link rel="icon" href="data:,">
-  <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=stCM-O-2Ji-GiT1lRUoGwlOZz1nl8OsQ4DZPfE-_OrfVQbHbOtSm95Afk3oZP6_3B87GgvDIA-rJf3UA6-sI8OAfYLqRCoBPXvXIROpFasIpkAvavMO-zURO5lZKDoBPZcyoYSevqGVOmPSFsMR1PXCRP35ugvJXAqg0vQ_hTxT2oDGnZTlcAXgR_0hqYEjs9qabSGnx9yhitYNw68ea-9LUEMQABQT93qRMyuWTuNWaB_Oo2pyF1trsh1ve93ssllFjh_2xT-WktZ24-h28Ow" charset="UTF-8"></script><script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=imsg4hE1hlxexYIrSXS3IMN1GIPzcWrtYwYvhhokTSFBaINeR4MCQ6TYUAizAPQE-XfXAOn03tZa1qkDpcBOxzgOxcScJcvxqXbyWr19iugZ1o1CH2cm3gMVZFWzoac8RWuuorhLXBYW2hfu4T3VPtznaqiRpVTuZxrtGOnujBikek7WmSI5aD3O1OHU_svckZexdoW8fdgZ_5X8eMggOZMkdNRDK79Pc7-Q_hNoyn6OLU7DxfQyM8x5YS7Ez-yXqQbozvopQekGrxS51v7sjA" charset="UTF-8"></script><style>
+  <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=EfKRiJXfSY13jRjZ5lKpcx2OxUQ1Wmb0Shbmpe0_v9zwWxYw98F77HkdC73tIKzmnkq4HlwIaHHvUNV8Pkie8pxAl5hJGgFsxqdhH1mB4xlwTYunCI7dVRJVT_elbp8PjlTizP9AlNSowwwiJnRzYFojwK0GLWU_ueqwNtaZ9MGDVKsS6cAGG5rx_TgowCMHCnINdx7PAPOuxuMrjeQYT8Mp7Db2d90Mk17N4Wiw70U_TfEvd_Skqzddk-V2EWzkREZtO7UwacUhKF91RZ7q-A" charset="UTF-8"></script><script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=imsg4hE1hlxexYIrSXS3IMN1GIPzcWrtYwYvhhokTSFBaINeR4MCQ6TYUAizAPQE-XfXAOn03tZa1qkDpcBOxzgOxcScJcvxqXbyWr19iugZ1o1CH2cm3gMVZFWzoac8RWuuorhLXBYW2hfu4T3VPtznaqiRpVTuZxrtGOnujBikek7WmSI5aD3O1OHU_svckZexdoW8fdgZ_5X8eMggOZMkdNRDK79Pc7-Q_hNoyn6OLU7DxfQyM8x5YS7Ez-yXqQbozvopQekGrxS51v7sjA" charset="UTF-8"></script><style>
     :root{
       --bg:#070a0f;
       --bg2:#0b1119;
@@ -642,6 +642,25 @@
       cursor:default;
     }
 
+    .mobile-more-wrap{
+      display:none;
+    }
+
+    .mobile-more-btn{
+      width:100%;
+      display:block;
+      margin:0 0 10px;
+    }
+
+    .mobile-more-content{
+      display:none;
+      gap:10px;
+    }
+
+    .mobile-more-content.open{
+      display:grid;
+    }
+
 
     @media (max-width:1080px){
       .statusbar,.main-grid,.meta-grid,.pool-grid{grid-template-columns:1fr}
@@ -728,6 +747,10 @@
         font-size:18px;
       }
       .mobile-tabs{display:flex}
+      .mobile-more-wrap{display:block}
+      #secondaryRow,#poolPanel,#statusBar,#metaGrid{display:none}
+      .mobile-more-content #secondaryRow,.mobile-more-content #poolPanel,.mobile-more-content #statusBar,.mobile-more-content #metaGrid{display:block}
+      .mobile-more-content #statusBar{display:grid}
       .statusbar{
         grid-template-columns:1fr 1fr;
         gap:8px;
@@ -759,7 +782,7 @@
 </head>
 <body>
   <div class="chaos-blast" id="chaosBlast"></div>
-  <div class="joker-overlay" id="jokerOverlay"><div class="joker-card"><img src="assets/chaos/joker.png" alt="Joker Octane"><div class="joker-text">Gotcha.</div></div></div>
+  <div class="joker-overlay" id="jokerOverlay"><div class="joker-card"><img data-src="assets/chaos/joker.png" alt="Joker Octane"><div class="joker-text">Gotcha.</div></div></div>
 
   <div class="wrap">
     <div class="topbar">
@@ -779,7 +802,7 @@
       <button id="showTvdbBtn" class="mobile-tab" disabled>TVDB</button>
     </div>
 
-    <div class="secondary-row">
+    <div class="secondary-row" id="secondaryRow">
       <button id="togglePoolsBtn" class="pill-toggle">Show Remaining Pools</button>
       <button id="soundToggleBtn" class="pill-toggle active">Sound On</button>
     </div>
@@ -825,6 +848,11 @@
   
     </div>
 
+    <div class="mobile-more-wrap" id="mobileMoreWrap">
+      <button id="mobileMoreBtn" class="mobile-more-btn">More</button>
+      <div id="mobileMoreContent" class="mobile-more-content"></div>
+    </div>
+
     <div class="main-grid">
       <div id="p1Card" class="player-card">
         <div class="card-content">
@@ -859,7 +887,7 @@
       </div>
     </div>
 
-    <div class="statusbar">
+    <div class="statusbar" id="statusBar">
       <div class="stat">
         <div class="stat-label">Legend Cycle</div>
         <div class="stat-value" id="legendCycleValue">-</div>
@@ -879,7 +907,7 @@
     </div>
 
 
-    <div class="meta-grid">
+    <div class="meta-grid" id="metaGrid">
       
         <div class="footer-note">
           Pistol Only chaos intentionally overrides cross-player unique guns and unique classes, otherwise that chaos mode would be impossible in Apex because there are only 3 pistols.
@@ -1046,164 +1074,59 @@
     let isRolling = false;
     let rollingInterval = null;
 
+    const soundPaths = {
+      bg: "assets/sounds/bg.m4a?v=7",
+      clickA: "assets/sounds/click.m4a?v=7",
+      clickB: "assets/sounds/click.m4a?v=7",
+      whoosh: "assets/sounds/woosh.m4a?v=7",
+      explosion: "assets/sounds/explosion.m4a?v=7",
+      joker: "assets/sounds/joker.m4a?v=7"
+    };
+
     const sounds = {
-      bg: new Audio("assets/sounds/bg.m4a?v=5"),
-      clickA: new Audio("assets/sounds/click.m4a?v=5"),
-      clickB: new Audio("assets/sounds/click.m4a?v=5"),
-      whoosh: new Audio("assets/sounds/woosh.m4a?v=5"),
-      explosion: new Audio("assets/sounds/explosion.m4a?v=5"),
-      joker: new Audio("assets/sounds/joker.m4a?v=5")
+      bg: null,
+      clickA: null,
+      clickB: null,
+      whoosh: null,
+      explosion: null,
+      joker: null
     };
 
     let useClickA = true;
 
-    sounds.bg.preload = "none";
-    sounds.clickA.preload = "auto";
-    sounds.clickB.preload = "auto";
-    sounds.whoosh.preload = "auto";
-    sounds.explosion.preload = "auto";
-    sounds.joker.preload = "auto";
-
-    sounds.bg.loop = true;
-    sounds.bg.volume = 0.2;
-    sounds.clickA.volume = 0.55;
-    sounds.clickB.volume = 0.55;
-    sounds.whoosh.volume = 0.7;
-    sounds.explosion.volume = 0.9;
-    sounds.joker.volume = 0.85;
+    function getSound(key) {
+      if (sounds[key]) return sounds[key];
+      const audio = new Audio(soundPaths[key]);
+      audio.preload = "none";
+      if (key === "bg") {
+        audio.loop = true;
+        audio.volume = 0.2;
+      } else if (key === "clickA" || key === "clickB") {
+        audio.volume = 0.55;
+      } else if (key === "whoosh") {
+        audio.volume = 0.7;
+      } else if (key === "explosion") {
+        audio.volume = 0.9;
+      } else if (key === "joker") {
+        audio.volume = 0.85;
+      }
+      sounds[key] = audio;
+      return audio;
+    }
 
     async function startAudioIfNeeded() {
       if (audioStarted || !soundEnabled) return;
       audioStarted = true;
       try {
-        // prime short sounds for faster first playback on mobile
-        sounds.clickA.load();
-        sounds.clickB.load();
-        sounds.whoosh.load();
-        sounds.explosion.load();
-        sounds.joker.load();
-        await sounds.bg.play();
+        getSound("clickA");
+        getSound("clickB");
+        getSound("whoosh");
+        const bg = getSound("bg");
+        await bg.play();
       } catch (_) {}
     }
 
-    function playRollTick() {
-      if (!soundEnabled) return;
-      const s = useClickA ? sounds.clickA : sounds.clickB;
-      useClickA = !useClickA;
-      try { s.currentTime = 0; } catch (_) {}
-      s.play().catch(() => {});
-    }
-
-    function playRevealHit() {
-      if (!soundEnabled) return;
-      sounds.whoosh.currentTime = 0;
-      sounds.whoosh.play().catch(() => {});
-    }
-
-    function playChaosExplosion() {
-      if (!soundEnabled) return;
-      sounds.explosion.currentTime = 0;
-      sounds.explosion.play().catch(() => {});
-    }
-
-    function playJokerHit() {
-      if (!soundEnabled || !sounds.joker) return;
-      sounds.joker.currentTime = 0;
-      sounds.joker.play().catch(() => {});
-    }
-
-    function playJokerLaugh() {
-      if (!soundEnabled) return;
-      sounds.joker.currentTime = 0;
-      sounds.joker.play().catch(() => {});
-    }
-
-    function triggerJokerChaosImpact() {
-      const overlay = document.getElementById("jokerOverlay");
-      overlay.classList.remove("show");
-      void overlay.offsetWidth;
-      overlay.classList.add("show");
-
-      document.body.classList.remove("joker-flash");
-      void document.body.offsetWidth;
-      document.body.classList.add("joker-flash");
-
-      document.body.classList.remove("chaos-shake");
-      void document.body.offsetWidth;
-      document.body.classList.add("chaos-shake");
-
-      playJokerLaugh();
-
-      setTimeout(() => {
-        overlay.classList.remove("show");
-        document.body.classList.remove("joker-flash");
-        document.body.classList.remove("chaos-shake");
-      }, 1900);
-    }
-
-    function animateSwapToFinal(p1FinalGuns, p2FinalGuns) {
-      const p1Wrap = document.getElementById("p1Weapons");
-      const p2Wrap = document.getElementById("p2Weapons");
-
-      document.getElementById("revealStage").textContent = "Swapping loadouts...";
-
-      p1Wrap.style.transition = "transform .95s ease, opacity .95s ease, filter .95s ease";
-      p2Wrap.style.transition = "transform .95s ease, opacity .95s ease, filter .95s ease";
-
-      p1Wrap.style.transform = "translateX(120px) scale(0.92) rotate(3deg)";
-      p2Wrap.style.transform = "translateX(-120px) scale(0.92) rotate(-3deg)";
-      p1Wrap.style.opacity = "0.05";
-      p2Wrap.style.opacity = "0.05";
-      p1Wrap.style.filter = "drop-shadow(0 0 18px rgba(140,255,120,0.5))";
-      p2Wrap.style.filter = "drop-shadow(0 0 18px rgba(180,80,255,0.5))";
-
-      setTimeout(() => {
-        renderWeaponRows("p1Weapons", p1FinalGuns);
-        p1FinalGuns.forEach((gun, idx) => setWeaponImage(`p1Weapons_img_${idx}`, gun));
-
-        renderWeaponRows("p2Weapons", p2FinalGuns);
-        p2FinalGuns.forEach((gun, idx) => setWeaponImage(`p2Weapons_img_${idx}`, gun));
-
-        p1Wrap.style.transform = "translateX(0) scale(1) rotate(0deg)";
-        p2Wrap.style.transform = "translateX(0) scale(1) rotate(0deg)";
-        p1Wrap.style.opacity = "1";
-        p2Wrap.style.opacity = "1";
-        p1Wrap.style.filter = "none";
-        p2Wrap.style.filter = "none";
-      }, 950);
-    }
-
-    function triggerChaosImpact() {
-      const blast = document.getElementById("chaosBlast");
-      const chaosBanner = document.getElementById("chaosBanner");
-      const chaosText = document.getElementById("chaosText");
-
-      blast.classList.remove("show");
-      void blast.offsetWidth;
-      blast.classList.add("show");
-
-      document.body.classList.remove("chaos-flash");
-      void document.body.offsetWidth;
-      document.body.classList.add("chaos-flash");
-
-      document.body.classList.remove("chaos-shake");
-      void document.body.offsetWidth;
-      document.body.classList.add("chaos-shake");
-
-      chaosBanner.classList.remove("show");
-      void chaosBanner.offsetWidth;
-      chaosBanner.classList.add("show");
-
-      playChaosExplosion();
-
-      setTimeout(() => {
-        blast.classList.remove("show");
-        document.body.classList.remove("chaos-flash");
-        document.body.classList.remove("chaos-shake");
-      }, 1350);
-    }
-
-    document.addEventListener("click", startAudioIfNeeded, { once: true });
+    document.addEventListener("pointerdown", startAudioIfNeeded, { once: true });
 
     // =========================
     // HELPERS
@@ -1739,32 +1662,38 @@
     }
 
     async function revealSequence(roll) {
+      const mobile = isMobileView();
       const p1Card = document.getElementById("p1Card");
       const p2Card = document.getElementById("p2Card");
 
-      p1Card.classList.add("hidden-reveal");
-      p2Card.classList.add("hidden-reveal");
-
-      clearCard("p1", "...");
-      clearCard("p2", "...");
+      if (!mobile) {
+        p1Card.classList.add("hidden-reveal");
+        p2Card.classList.add("hidden-reveal");
+        clearCard("p1", "...");
+        clearCard("p2", "...");
+      }
 
       document.getElementById("revealStage").textContent = "Incoming: Dj Read";
       await new Promise(r => setTimeout(r, 420));
 
-      p1Card.classList.remove("hidden-reveal");
-      p1Card.classList.remove("reveal");
-      void p1Card.offsetWidth;
-      p1Card.classList.add("reveal");
-      if (roll.chaosMode && roll.previewP1Guns) {
-        document.getElementById("p1Legend").textContent = roll.p1.legend;
-        renderWeaponRows("p1Weapons", roll.previewP1Guns);
-        setLegendImage("p1LegendWrap", roll.p1.legend);
-        roll.previewP1Guns.forEach((gun, idx) => {
-          setWeaponImage(`p1Weapons_img_${idx}`, gun);
-        });
-      } else {
-        renderFinalCard("p1", roll.p1);
+      if (!mobile) {
+        p1Card.classList.remove("hidden-reveal");
+        p1Card.classList.remove("reveal");
+        void p1Card.offsetWidth;
+        p1Card.classList.add("reveal");
+        if (roll.chaosMode && roll.previewP1Guns) {
+          document.getElementById("p1Legend").textContent = roll.p1.legend;
+          renderWeaponRows("p1Weapons", roll.previewP1Guns);
+          setLegendImage("p1LegendWrap", roll.p1.legend);
+          roll.previewP1Guns.forEach((gun, idx) => {
+            setWeaponImage(`p1Weapons_img_${idx}`, gun);
+          });
+        } else {
+          renderFinalCard("p1", roll.p1);
+        }
       }
+
+      renderMobileCard("p1", (roll.chaosMode && roll.previewP1Guns) ? { ...roll.p1, guns: roll.previewP1Guns } : roll.p1);
       playRevealHit();
 
       document.getElementById("revealStage").textContent = `${roll.p1.legend} locked in`;
@@ -1773,20 +1702,24 @@
       document.getElementById("revealStage").textContent = "Incoming: Tvdb";
       await new Promise(r => setTimeout(r, 320));
 
-      p2Card.classList.remove("hidden-reveal");
-      p2Card.classList.remove("reveal-right");
-      void p2Card.offsetWidth;
-      p2Card.classList.add("reveal-right");
-      if (roll.chaosMode && roll.previewP2Guns) {
-        document.getElementById("p2Legend").textContent = roll.p2.legend;
-        renderWeaponRows("p2Weapons", roll.previewP2Guns);
-        setLegendImage("p2LegendWrap", roll.p2.legend);
-        roll.previewP2Guns.forEach((gun, idx) => {
-          setWeaponImage(`p2Weapons_img_${idx}`, gun);
-        });
-      } else {
-        renderFinalCard("p2", roll.p2);
+      if (!mobile) {
+        p2Card.classList.remove("hidden-reveal");
+        p2Card.classList.remove("reveal-right");
+        void p2Card.offsetWidth;
+        p2Card.classList.add("reveal-right");
+        if (roll.chaosMode && roll.previewP2Guns) {
+          document.getElementById("p2Legend").textContent = roll.p2.legend;
+          renderWeaponRows("p2Weapons", roll.previewP2Guns);
+          setLegendImage("p2LegendWrap", roll.p2.legend);
+          roll.previewP2Guns.forEach((gun, idx) => {
+            setWeaponImage(`p2Weapons_img_${idx}`, gun);
+          });
+        } else {
+          renderFinalCard("p2", roll.p2);
+        }
       }
+
+      renderMobileCard("p2", (roll.chaosMode && roll.previewP2Guns) ? { ...roll.p2, guns: roll.previewP2Guns } : roll.p2);
       playRevealHit();
 
       document.getElementById("revealStage").textContent = `${roll.p2.legend} locked in`;
@@ -1820,19 +1753,25 @@
 
         if (roll.chaosMode === "pistol" && roll.previewP1Guns && roll.previewP2Guns) {
           await new Promise(r => setTimeout(r, 520));
-          renderWeaponRows("p1Weapons", roll.previewP1Guns);
-          roll.previewP1Guns.forEach((gun, idx) => setWeaponImage(`p1Weapons_img_${idx}`, gun));
+          if (!mobile) {
+            renderWeaponRows("p1Weapons", roll.previewP1Guns);
+            roll.previewP1Guns.forEach((gun, idx) => setWeaponImage(`p1Weapons_img_${idx}`, gun));
 
-          renderWeaponRows("p2Weapons", roll.previewP2Guns);
-          roll.previewP2Guns.forEach((gun, idx) => setWeaponImage(`p2Weapons_img_${idx}`, gun));
+            renderWeaponRows("p2Weapons", roll.previewP2Guns);
+            roll.previewP2Guns.forEach((gun, idx) => setWeaponImage(`p2Weapons_img_${idx}`, gun));
+          }
 
           await new Promise(r => setTimeout(r, 1000));
 
-          renderWeaponRows("p1Weapons", roll.p1.guns);
-          roll.p1.guns.forEach((gun, idx) => setWeaponImage(`p1Weapons_img_${idx}`, gun));
+          if (!mobile) {
+            renderWeaponRows("p1Weapons", roll.p1.guns);
+            roll.p1.guns.forEach((gun, idx) => setWeaponImage(`p1Weapons_img_${idx}`, gun));
 
-          renderWeaponRows("p2Weapons", roll.p2.guns);
-          roll.p2.guns.forEach((gun, idx) => setWeaponImage(`p2Weapons_img_${idx}`, gun));
+            renderWeaponRows("p2Weapons", roll.p2.guns);
+            roll.p2.guns.forEach((gun, idx) => setWeaponImage(`p2Weapons_img_${idx}`, gun));
+          }
+
+          renderMobileCard("p2", roll.p2);
         }
       } else {
         document.getElementById("revealStage").textContent = "Loadouts locked";
@@ -1877,6 +1816,36 @@
       if (!mobileTabsEnabled || !appState || !appState.currentRoll) return;
       const roll = appState.currentRoll;
       renderMobileCard(sideKey, sideKey === "p1" ? roll.p1 : roll.p2);
+    }
+
+
+    let mobileExtrasOpen = false;
+
+    function setupMobileMoreSection() {
+      const moreWrap = document.getElementById("mobileMoreWrap");
+      const moreContent = document.getElementById("mobileMoreContent");
+      const secondaryRow = document.getElementById("secondaryRow");
+      const poolPanel = document.getElementById("poolPanel");
+      const statusBar = document.getElementById("statusBar");
+      const metaGrid = document.getElementById("metaGrid");
+      const wrap = document.querySelector(".wrap");
+      const mainGrid = document.querySelector(".main-grid");
+
+      if (isMobileView()) {
+        if (!moreContent.contains(secondaryRow)) moreContent.appendChild(secondaryRow);
+        if (!moreContent.contains(poolPanel)) moreContent.appendChild(poolPanel);
+        if (!moreContent.contains(statusBar)) moreContent.appendChild(statusBar);
+        if (!moreContent.contains(metaGrid)) moreContent.appendChild(metaGrid);
+        moreWrap.style.display = "block";
+        moreContent.classList.toggle("open", mobileExtrasOpen);
+      } else {
+        if (moreWrap.contains(secondaryRow)) wrap.insertBefore(secondaryRow, document.getElementById("revealStage"));
+        if (moreWrap.contains(poolPanel)) wrap.insertBefore(poolPanel, document.getElementById("chaosBanner"));
+        if (moreWrap.contains(statusBar)) wrap.insertBefore(statusBar, document.getElementById("metaGrid"));
+        if (moreWrap.contains(metaGrid)) wrap.appendChild(metaGrid);
+        moreWrap.style.display = "none";
+        moreContent.classList.remove("open");
+      }
     }
 
     // =========================
@@ -1943,6 +1912,7 @@
       appState = state;
       lastRenderedTimestamp = state.lastUpdated || null;
       render(appState, false);
+      setupMobileMoreSection();
       setStatus("Connected.");
     }
 
@@ -1970,6 +1940,12 @@
     document.getElementById("showDjBtn").addEventListener("click", () => showMobileView("p1"));
     document.getElementById("showTvdbBtn").addEventListener("click", () => showMobileView("p2"));
 
+    document.getElementById("mobileMoreBtn").addEventListener("click", () => {
+      mobileExtrasOpen = !mobileExtrasOpen;
+      document.getElementById("mobileMoreBtn").textContent = mobileExtrasOpen ? "Less" : "More";
+      document.getElementById("mobileMoreContent").classList.toggle("open", mobileExtrasOpen);
+    });
+
 
     // =========================
     // REALTIME
@@ -1994,6 +1970,8 @@
       )
       .subscribe();
 
+    setupMobileMoreSection();
+    window.addEventListener("resize", setupMobileMoreSection);
     boot();
   </script>
 </body>
