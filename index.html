@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Apex Duo Challenge</title>
   <link rel="icon" href="data:,">
-  <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=LnwC8U4TGWyzrYrkDSHjPdEcb0e6RczJi8-A5ABc5eMgXuCgp5ji-VDgiRZuT14fioE17hYoFhlqWFgoVwQNLoeJbrv6eflTaTrXnqWzS-Z0-CBtvG1J3SPhzlTgTmOMxSgil61DMrGbW1L_9xHCVxDwnmhh0B0_IRvpWghcyaY9BOKqMKs9mQ56VbVDOzeYR3uJz25tQqW9xpuF-B5g2wJVZ0xPFS9qhsWNsIxJUrMbUvJkpW3O-Jova9IW04bJ9m9-Jyt9PARi1yppHfGyoA" charset="UTF-8"></script><script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=imsg4hE1hlxexYIrSXS3IMN1GIPzcWrtYwYvhhokTSFBaINeR4MCQ6TYUAizAPQE-XfXAOn03tZa1qkDpcBOxzgOxcScJcvxqXbyWr19iugZ1o1CH2cm3gMVZFWzoac8RWuuorhLXBYW2hfu4T3VPtznaqiRpVTuZxrtGOnujBikek7WmSI5aD3O1OHU_svckZexdoW8fdgZ_5X8eMggOZMkdNRDK79Pc7-Q_hNoyn6OLU7DxfQyM8x5YS7Ez-yXqQbozvopQekGrxS51v7sjA" charset="UTF-8"></script><style>
+  <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=7Q4-tABuC6BoWQsToA_WMbIT-tx1-v9ehEBMDokCm9T5OFoAS9PaEasIm9wj7rozoBZ3Ya3Oxg57OlQZy55uaIvv1m2COWsaBgQWul0egSQ52xmiGGBnZEcNVei3PePHgqqeS-qn1e2CMzd4R2KSdgxM3JDoxRLluluSq_-QIsepsqHTX1gwMwMHCIeOn8pfLOT65EY5cf8_K8A7DcKYR-epV_RgvysDu2HjyUit18uRb66DKbO13RJZsodEyRCrugfHY9hr2dse5WE1o9Ba0A" charset="UTF-8"></script><script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=imsg4hE1hlxexYIrSXS3IMN1GIPzcWrtYwYvhhokTSFBaINeR4MCQ6TYUAizAPQE-XfXAOn03tZa1qkDpcBOxzgOxcScJcvxqXbyWr19iugZ1o1CH2cm3gMVZFWzoac8RWuuorhLXBYW2hfu4T3VPtznaqiRpVTuZxrtGOnujBikek7WmSI5aD3O1OHU_svckZexdoW8fdgZ_5X8eMggOZMkdNRDK79Pc7-Q_hNoyn6OLU7DxfQyM8x5YS7Ez-yXqQbozvopQekGrxS51v7sjA" charset="UTF-8"></script><style>
     :root{
       --bg:#070a0f;
       --bg2:#0b1119;
@@ -1059,6 +1059,10 @@
     sounds.click.volume = 0.6;
     sounds.whoosh.volume = 0.7;
     sounds.explosion.volume = 0.9;
+    if (sounds.joker) {
+      sounds.joker.volume = 0.8;
+      sounds.joker.preload = "none";
+    }
     sounds.joker.volume = 0.85;
 
     async function startAudioIfNeeded() {
@@ -1085,6 +1089,12 @@
       if (!soundEnabled) return;
       sounds.explosion.currentTime = 0;
       sounds.explosion.play().catch(() => {});
+    }
+
+    function playJokerHit() {
+      if (!soundEnabled || !sounds.joker) return;
+      sounds.joker.currentTime = 0;
+      sounds.joker.play().catch(() => {});
     }
 
     function playJokerLaugh() {
