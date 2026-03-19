@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Apex Duo Challenge</title>
   <link rel="icon" href="data:,">
-  <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=EfKRiJXfSY13jRjZ5lKpcx2OxUQ1Wmb0Shbmpe0_v9zwWxYw98F77HkdC73tIKzmnkq4HlwIaHHvUNV8Pkie8pxAl5hJGgFsxqdhH1mB4xlwTYunCI7dVRJVT_elbp8PjlTizP9AlNSowwwiJnRzYFojwK0GLWU_ueqwNtaZ9MGDVKsS6cAGG5rx_TgowCMHCnINdx7PAPOuxuMrjeQYT8Mp7Db2d90Mk17N4Wiw70U_TfEvd_Skqzddk-V2EWzkREZtO7UwacUhKF91RZ7q-A" charset="UTF-8"></script><script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=imsg4hE1hlxexYIrSXS3IMN1GIPzcWrtYwYvhhokTSFBaINeR4MCQ6TYUAizAPQE-XfXAOn03tZa1qkDpcBOxzgOxcScJcvxqXbyWr19iugZ1o1CH2cm3gMVZFWzoac8RWuuorhLXBYW2hfu4T3VPtznaqiRpVTuZxrtGOnujBikek7WmSI5aD3O1OHU_svckZexdoW8fdgZ_5X8eMggOZMkdNRDK79Pc7-Q_hNoyn6OLU7DxfQyM8x5YS7Ez-yXqQbozvopQekGrxS51v7sjA" charset="UTF-8"></script><style>
+  <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=2IRQTWHEVqEnzk2uw3svvj0CdLw-2xEKBsU-uLeoZUM6HN80egtP4xYWDu9V7MU-_z0eEgRNoeSiBrNSNLs9NSHuk-aQtoopV1LuHg9fxn0BZB_UEsT4m8G1O6H8OoJEKGYpo36Iek1bGnl-3MrClKa9ljklqJ9cUwEcBdv3qHOeg6pu7p8s1bWshPNHNpF-M3u-JIAJnmZoptSzcKHJLzU5OtU4BxxLdheaKdXxVpPwC8f9_0jpilN6FAg4WLxPTJo4APknAiDJOhINJgBpjg" charset="UTF-8"></script><script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=imsg4hE1hlxexYIrSXS3IMN1GIPzcWrtYwYvhhokTSFBaINeR4MCQ6TYUAizAPQE-XfXAOn03tZa1qkDpcBOxzgOxcScJcvxqXbyWr19iugZ1o1CH2cm3gMVZFWzoac8RWuuorhLXBYW2hfu4T3VPtznaqiRpVTuZxrtGOnujBikek7WmSI5aD3O1OHU_svckZexdoW8fdgZ_5X8eMggOZMkdNRDK79Pc7-Q_hNoyn6OLU7DxfQyM8x5YS7Ez-yXqQbozvopQekGrxS51v7sjA" charset="UTF-8"></script><style>
     :root{
       --bg:#070a0f;
       --bg2:#0b1119;
@@ -644,21 +644,17 @@
 
     .mobile-more-wrap{
       display:none;
+      margin-top:10px;
     }
-
     .mobile-more-btn{
       width:100%;
-      display:block;
-      margin:0 0 10px;
+      margin-bottom:10px;
     }
-
     .mobile-more-content{
       display:none;
-      gap:10px;
     }
-
     .mobile-more-content.open{
-      display:grid;
+      display:block;
     }
 
 
@@ -748,9 +744,8 @@
       }
       .mobile-tabs{display:flex}
       .mobile-more-wrap{display:block}
-      #secondaryRow,#poolPanel,#statusBar,#metaGrid{display:none}
-      .mobile-more-content #secondaryRow,.mobile-more-content #poolPanel,.mobile-more-content #statusBar,.mobile-more-content #metaGrid{display:block}
-      .mobile-more-content #statusBar{display:grid}
+      .mobile-more-content{display:none}
+      .mobile-more-content.open{display:block}
       .statusbar{
         grid-template-columns:1fr 1fr;
         gap:8px;
@@ -802,7 +797,7 @@
       <button id="showTvdbBtn" class="mobile-tab" disabled>TVDB</button>
     </div>
 
-    <div class="secondary-row" id="secondaryRow">
+    <div class="secondary-row">
       <button id="togglePoolsBtn" class="pill-toggle">Show Remaining Pools</button>
       <button id="soundToggleBtn" class="pill-toggle active">Sound On</button>
     </div>
@@ -848,11 +843,6 @@
   
     </div>
 
-    <div class="mobile-more-wrap" id="mobileMoreWrap">
-      <button id="mobileMoreBtn" class="mobile-more-btn">More</button>
-      <div id="mobileMoreContent" class="mobile-more-content"></div>
-    </div>
-
     <div class="main-grid">
       <div id="p1Card" class="player-card">
         <div class="card-content">
@@ -887,7 +877,10 @@
       </div>
     </div>
 
-    <div class="statusbar" id="statusBar">
+    <div class="mobile-more-wrap">
+      <button id="mobileMoreBtn" class="mobile-more-btn">More</button>
+      <div id="mobileMoreContent" class="mobile-more-content">
+    <div class="statusbar">
       <div class="stat">
         <div class="stat-label">Legend Cycle</div>
         <div class="stat-value" id="legendCycleValue">-</div>
@@ -907,7 +900,7 @@
     </div>
 
 
-    <div class="meta-grid" id="metaGrid">
+    <div class="meta-grid">
       
         <div class="footer-note">
           Pistol Only chaos intentionally overrides cross-player unique guns and unique classes, otherwise that chaos mode would be impossible in Apex because there are only 3 pistols.
@@ -920,6 +913,8 @@
         <h3>Connection</h3>
         <div id="statusText" class="status-text">Starting...</div>
         <div id="updatedAtText" class="small" style="margin-top:12px;"></div>
+      </div>
+    </div>
       </div>
     </div>
   </div>
@@ -1075,52 +1070,34 @@
     let rollingInterval = null;
 
     const soundPaths = {
-      bg: "assets/sounds/bg.m4a?v=7",
-      clickA: "assets/sounds/click.m4a?v=7",
-      clickB: "assets/sounds/click.m4a?v=7",
-      whoosh: "assets/sounds/woosh.m4a?v=7",
-      explosion: "assets/sounds/explosion.m4a?v=7",
-      joker: "assets/sounds/joker.m4a?v=7"
+      bg: "assets/sounds/bg.m4a?v=8",
+      clickA: "assets/sounds/click.m4a?v=8",
+      clickB: "assets/sounds/click.m4a?v=8",
+      woosh: "assets/sounds/woosh.m4a?v=8",
+      explosion: "assets/sounds/explosion.m4a?v=8",
+      joker: "assets/sounds/joker.m4a?v=8"
     };
 
-    const sounds = {
-      bg: null,
-      clickA: null,
-      clickB: null,
-      whoosh: null,
-      explosion: null,
-      joker: null
-    };
-
+    const sounds = { bg:null, clickA:null, clickB:null, woosh:null, explosion:null, joker:null };
     let useClickA = true;
 
-    function getSound(key) {
-      if (sounds[key]) return sounds[key];
-      const audio = new Audio(soundPaths[key]);
-      audio.preload = "none";
-      if (key === "bg") {
-        audio.loop = true;
-        audio.volume = 0.2;
-      } else if (key === "clickA" || key === "clickB") {
-        audio.volume = 0.55;
-      } else if (key === "whoosh") {
-        audio.volume = 0.7;
-      } else if (key === "explosion") {
-        audio.volume = 0.9;
-      } else if (key === "joker") {
-        audio.volume = 0.85;
-      }
-      sounds[key] = audio;
-      return audio;
+    function getSound(name){
+      if (sounds[name]) return sounds[name];
+      const a = new Audio(soundPaths[name]);
+      a.preload = "none";
+      if (name === "bg") { a.loop = true; a.volume = 0.2; }
+      else if (name === "clickA" || name === "clickB") a.volume = 0.55;
+      else if (name === "woosh") a.volume = 0.7;
+      else if (name === "explosion") a.volume = 0.9;
+      else if (name === "joker") a.volume = 0.85;
+      sounds[name] = a;
+      return a;
     }
 
     async function startAudioIfNeeded() {
       if (audioStarted || !soundEnabled) return;
       audioStarted = true;
       try {
-        getSound("clickA");
-        getSound("clickB");
-        getSound("whoosh");
         const bg = getSound("bg");
         await bg.play();
       } catch (_) {}
@@ -1662,38 +1639,32 @@
     }
 
     async function revealSequence(roll) {
-      const mobile = isMobileView();
       const p1Card = document.getElementById("p1Card");
       const p2Card = document.getElementById("p2Card");
 
-      if (!mobile) {
-        p1Card.classList.add("hidden-reveal");
-        p2Card.classList.add("hidden-reveal");
-        clearCard("p1", "...");
-        clearCard("p2", "...");
-      }
+      p1Card.classList.add("hidden-reveal");
+      p2Card.classList.add("hidden-reveal");
+
+      clearCard("p1", "...");
+      clearCard("p2", "...");
 
       document.getElementById("revealStage").textContent = "Incoming: Dj Read";
       await new Promise(r => setTimeout(r, 420));
 
-      if (!mobile) {
-        p1Card.classList.remove("hidden-reveal");
-        p1Card.classList.remove("reveal");
-        void p1Card.offsetWidth;
-        p1Card.classList.add("reveal");
-        if (roll.chaosMode && roll.previewP1Guns) {
-          document.getElementById("p1Legend").textContent = roll.p1.legend;
-          renderWeaponRows("p1Weapons", roll.previewP1Guns);
-          setLegendImage("p1LegendWrap", roll.p1.legend);
-          roll.previewP1Guns.forEach((gun, idx) => {
-            setWeaponImage(`p1Weapons_img_${idx}`, gun);
-          });
-        } else {
-          renderFinalCard("p1", roll.p1);
-        }
+      p1Card.classList.remove("hidden-reveal");
+      p1Card.classList.remove("reveal");
+      void p1Card.offsetWidth;
+      p1Card.classList.add("reveal");
+      if (roll.chaosMode && roll.previewP1Guns) {
+        document.getElementById("p1Legend").textContent = roll.p1.legend;
+        renderWeaponRows("p1Weapons", roll.previewP1Guns);
+        setLegendImage("p1LegendWrap", roll.p1.legend);
+        roll.previewP1Guns.forEach((gun, idx) => {
+          setWeaponImage(`p1Weapons_img_${idx}`, gun);
+        });
+      } else {
+        renderFinalCard("p1", roll.p1);
       }
-
-      renderMobileCard("p1", (roll.chaosMode && roll.previewP1Guns) ? { ...roll.p1, guns: roll.previewP1Guns } : roll.p1);
       playRevealHit();
 
       document.getElementById("revealStage").textContent = `${roll.p1.legend} locked in`;
@@ -1702,24 +1673,20 @@
       document.getElementById("revealStage").textContent = "Incoming: Tvdb";
       await new Promise(r => setTimeout(r, 320));
 
-      if (!mobile) {
-        p2Card.classList.remove("hidden-reveal");
-        p2Card.classList.remove("reveal-right");
-        void p2Card.offsetWidth;
-        p2Card.classList.add("reveal-right");
-        if (roll.chaosMode && roll.previewP2Guns) {
-          document.getElementById("p2Legend").textContent = roll.p2.legend;
-          renderWeaponRows("p2Weapons", roll.previewP2Guns);
-          setLegendImage("p2LegendWrap", roll.p2.legend);
-          roll.previewP2Guns.forEach((gun, idx) => {
-            setWeaponImage(`p2Weapons_img_${idx}`, gun);
-          });
-        } else {
-          renderFinalCard("p2", roll.p2);
-        }
+      p2Card.classList.remove("hidden-reveal");
+      p2Card.classList.remove("reveal-right");
+      void p2Card.offsetWidth;
+      p2Card.classList.add("reveal-right");
+      if (roll.chaosMode && roll.previewP2Guns) {
+        document.getElementById("p2Legend").textContent = roll.p2.legend;
+        renderWeaponRows("p2Weapons", roll.previewP2Guns);
+        setLegendImage("p2LegendWrap", roll.p2.legend);
+        roll.previewP2Guns.forEach((gun, idx) => {
+          setWeaponImage(`p2Weapons_img_${idx}`, gun);
+        });
+      } else {
+        renderFinalCard("p2", roll.p2);
       }
-
-      renderMobileCard("p2", (roll.chaosMode && roll.previewP2Guns) ? { ...roll.p2, guns: roll.previewP2Guns } : roll.p2);
       playRevealHit();
 
       document.getElementById("revealStage").textContent = `${roll.p2.legend} locked in`;
@@ -1753,25 +1720,19 @@
 
         if (roll.chaosMode === "pistol" && roll.previewP1Guns && roll.previewP2Guns) {
           await new Promise(r => setTimeout(r, 520));
-          if (!mobile) {
-            renderWeaponRows("p1Weapons", roll.previewP1Guns);
-            roll.previewP1Guns.forEach((gun, idx) => setWeaponImage(`p1Weapons_img_${idx}`, gun));
+          renderWeaponRows("p1Weapons", roll.previewP1Guns);
+          roll.previewP1Guns.forEach((gun, idx) => setWeaponImage(`p1Weapons_img_${idx}`, gun));
 
-            renderWeaponRows("p2Weapons", roll.previewP2Guns);
-            roll.previewP2Guns.forEach((gun, idx) => setWeaponImage(`p2Weapons_img_${idx}`, gun));
-          }
+          renderWeaponRows("p2Weapons", roll.previewP2Guns);
+          roll.previewP2Guns.forEach((gun, idx) => setWeaponImage(`p2Weapons_img_${idx}`, gun));
 
           await new Promise(r => setTimeout(r, 1000));
 
-          if (!mobile) {
-            renderWeaponRows("p1Weapons", roll.p1.guns);
-            roll.p1.guns.forEach((gun, idx) => setWeaponImage(`p1Weapons_img_${idx}`, gun));
+          renderWeaponRows("p1Weapons", roll.p1.guns);
+          roll.p1.guns.forEach((gun, idx) => setWeaponImage(`p1Weapons_img_${idx}`, gun));
 
-            renderWeaponRows("p2Weapons", roll.p2.guns);
-            roll.p2.guns.forEach((gun, idx) => setWeaponImage(`p2Weapons_img_${idx}`, gun));
-          }
-
-          renderMobileCard("p2", roll.p2);
+          renderWeaponRows("p2Weapons", roll.p2.guns);
+          roll.p2.guns.forEach((gun, idx) => setWeaponImage(`p2Weapons_img_${idx}`, gun));
         }
       } else {
         document.getElementById("revealStage").textContent = "Loadouts locked";
@@ -1816,36 +1777,6 @@
       if (!mobileTabsEnabled || !appState || !appState.currentRoll) return;
       const roll = appState.currentRoll;
       renderMobileCard(sideKey, sideKey === "p1" ? roll.p1 : roll.p2);
-    }
-
-
-    let mobileExtrasOpen = false;
-
-    function setupMobileMoreSection() {
-      const moreWrap = document.getElementById("mobileMoreWrap");
-      const moreContent = document.getElementById("mobileMoreContent");
-      const secondaryRow = document.getElementById("secondaryRow");
-      const poolPanel = document.getElementById("poolPanel");
-      const statusBar = document.getElementById("statusBar");
-      const metaGrid = document.getElementById("metaGrid");
-      const wrap = document.querySelector(".wrap");
-      const mainGrid = document.querySelector(".main-grid");
-
-      if (isMobileView()) {
-        if (!moreContent.contains(secondaryRow)) moreContent.appendChild(secondaryRow);
-        if (!moreContent.contains(poolPanel)) moreContent.appendChild(poolPanel);
-        if (!moreContent.contains(statusBar)) moreContent.appendChild(statusBar);
-        if (!moreContent.contains(metaGrid)) moreContent.appendChild(metaGrid);
-        moreWrap.style.display = "block";
-        moreContent.classList.toggle("open", mobileExtrasOpen);
-      } else {
-        if (moreWrap.contains(secondaryRow)) wrap.insertBefore(secondaryRow, document.getElementById("revealStage"));
-        if (moreWrap.contains(poolPanel)) wrap.insertBefore(poolPanel, document.getElementById("chaosBanner"));
-        if (moreWrap.contains(statusBar)) wrap.insertBefore(statusBar, document.getElementById("metaGrid"));
-        if (moreWrap.contains(metaGrid)) wrap.appendChild(metaGrid);
-        moreWrap.style.display = "none";
-        moreContent.classList.remove("open");
-      }
     }
 
     // =========================
@@ -1912,7 +1843,6 @@
       appState = state;
       lastRenderedTimestamp = state.lastUpdated || null;
       render(appState, false);
-      setupMobileMoreSection();
       setStatus("Connected.");
     }
 
@@ -1933,7 +1863,7 @@
         await startAudioIfNeeded();
         playRevealHit();
       } else {
-        sounds.bg.pause();
+        if (sounds.bg) sounds.bg.pause();
       }
     });
 
@@ -1941,9 +1871,10 @@
     document.getElementById("showTvdbBtn").addEventListener("click", () => showMobileView("p2"));
 
     document.getElementById("mobileMoreBtn").addEventListener("click", () => {
-      mobileExtrasOpen = !mobileExtrasOpen;
-      document.getElementById("mobileMoreBtn").textContent = mobileExtrasOpen ? "Less" : "More";
-      document.getElementById("mobileMoreContent").classList.toggle("open", mobileExtrasOpen);
+      const content = document.getElementById("mobileMoreContent");
+      const btn = document.getElementById("mobileMoreBtn");
+      const open = content.classList.toggle("open");
+      btn.textContent = open ? "Less" : "More";
     });
 
 
@@ -1970,8 +1901,6 @@
       )
       .subscribe();
 
-    setupMobileMoreSection();
-    window.addEventListener("resize", setupMobileMoreSection);
     boot();
   </script>
 </body>
