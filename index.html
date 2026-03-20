@@ -1672,7 +1672,7 @@
     // =========================
     // ROLL ANIMATION / REVEAL
     // =========================
-    function startRollAnimation() {
+    function startRollAnimation(mobileTarget = "p1") {
       clearInterval(rollingInterval);
 
       const p1Card = document.getElementById("p1Card");
@@ -1702,6 +1702,15 @@
         renderWeaponRows("p2Weapons", [p2GunA, p2GunB]);
         document.getElementById("p1LegendWrap").innerHTML = `<div class="legend-fallback">${p1Legend}</div>`;
         document.getElementById("p2LegendWrap").innerHTML = `<div class="legend-fallback">${p2Legend}</div>`;
+
+        if (isMobileView()) {
+          if (mobileTarget === "p2") {
+            renderMobileRollingPreview("p2", p2Legend, [p2GunA, p2GunB]);
+          } else {
+            renderMobileRollingPreview("p1", p1Legend, [p1GunA, p1GunB]);
+          }
+        }
+
         playRollTick();
         i += 1;
       }, 100);
@@ -1715,6 +1724,11 @@
     }
 
     async function revealSequence(roll) {
+      if (isMobileView()) {
+        await revealSequenceMobile(roll);
+        return;
+      }
+
       const p1Card = document.getElementById("p1Card");
       const p2Card = document.getElementById("p2Card");
 
@@ -1849,6 +1863,72 @@
       document.getElementById("showTvdbBtn").classList.toggle("active", sideKey === "p2");
     }
 
+    function renderMobileRollingPreview(sideKey, legendName, guns) {
+      document.getElementById("mobilePlayerName").textContent = sideKey === "p1" ? "DJ READ" : "TVDB";
+      document.getElementById("mobileLegend").textContent = legendName;
+      renderWeaponRows("mobileWeapons", guns);
+      document.getElementById("mobileLegendWrap").innerHTML = `<div class="legend-fallback">${legendName}</div>`;
+      mobileActiveView = sideKey;
+      document.getElementById("showDjBtn").classList.toggle("active", sideKey === "p1");
+      document.getElementById("showTvdbBtn").classList.toggle("active", sideKey === "p2");
+    }
+
+    async function revealSequenceMobile(roll) {
+      const p1Reveal = (roll.chaosMode && roll.previewP1Guns) ? { ...roll.p1, guns: roll.previewP1Guns } : roll.p1;
+      const p2Reveal = (roll.chaosMode && roll.previewP2Guns) ? { ...roll.p2, guns: roll.previewP2Guns } : roll.p2;
+
+      document.getElementById("chaosBanner").classList.remove("show");
+      setMobileTabState(false);
+
+      if (!rollingInterval) {
+        startRollAnimation("p1");
+      }
+      document.getElementById("revealStage").textContent = "Rolling legends and loadouts...";
+      await new Promise(r => setTimeout(r, 900));
+      stopRollAnimation();
+
+      renderMobileCard("p1", p1Reveal);
+      playRevealHit();
+      document.getElementById("revealStage").textContent = `${roll.p1.legend} locked in`;
+      await new Promise(r => setTimeout(r, 3000));
+
+      startRollAnimation("p2");
+      document.getElementById("revealStage").textContent = "Rolling legends and loadouts...";
+      await new Promise(r => setTimeout(r, 900));
+      stopRollAnimation();
+
+      renderMobileCard("p2", p2Reveal);
+      playRevealHit();
+      document.getElementById("revealStage").textContent = `${roll.p2.legend} locked in`;
+      await new Promise(r => setTimeout(r, 3000));
+
+      if (roll.chaosMode) {
+        document.getElementById("chaosText").textContent =
+          roll.chaosMode === "swap" ? "Both players must swap guns" : "Pistol only";
+
+        document.getElementById("revealStage").textContent = "Wait for it...";
+        await new Promise(r => setTimeout(r, 500));
+
+        if (roll.chaosMode === "swap") {
+          triggerJokerChaosImpact();
+        } else {
+          triggerChaosImpact();
+        }
+
+        document.getElementById("revealStage").textContent =
+          roll.chaosMode === "swap" ? "CHAOS: Swap Weapons" : "CHAOS: Pistols Only";
+
+        await new Promise(r => setTimeout(r, 1000));
+        renderMobileCard("p2", roll.p2);
+        await new Promise(r => setTimeout(r, 1200));
+      } else {
+        document.getElementById("revealStage").textContent = "Loadouts ready";
+      }
+
+      setMobileTabState(true);
+      setActiveTab("p1");
+    }
+
     function showMobileView(sideKey) {
       if (!mobileTabsEnabled || !appState || !appState.currentRoll) return;
       const roll = appState.currentRoll;
@@ -1863,11 +1943,12 @@
 
       isRolling = true;
       const rollBtn = document.getElementById("rollBtn");
+      const mobileMode = isMobileView();
       rollBtn.disabled = true;
       rollBtn.textContent = "ROLLING...";
       setStatus("Rolling...");
       await startAudioIfNeeded();
-      startRollAnimation();
+      startRollAnimation("p1");
 
       try {
         const latest = await loadState();
@@ -1880,7 +1961,9 @@
         if (!ok) throw new Error("Could not save next session state.");
 
         appState = nextState;
-        stopRollAnimation();
+        if (!mobileMode) {
+          stopRollAnimation();
+        }
         render(appState, true);
         setStatus("Roll sent.");
       } catch (err) {
