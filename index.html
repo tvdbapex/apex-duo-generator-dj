@@ -394,7 +394,7 @@
 
     .legend-image{
       width:100%;
-      max-width:520px;
+      max-width:760px;
       max-height:100%;
       object-fit:contain;
       object-position:center bottom;
@@ -546,7 +546,7 @@
 
     .joker-overlay.show{
       display:flex;
-      animation:jokerFade 1.9s ease-out forwards;
+      animation:jokerFade 6.1s ease-out forwards;
     }
 
     .joker-card{
@@ -557,12 +557,12 @@
       gap:10px;
       transform:scale(.75);
       filter:drop-shadow(0 0 22px rgba(95,255,120,.35)) drop-shadow(0 0 42px rgba(150,0,210,.18));
-      animation:jokerPop 1.75s cubic-bezier(.2,.8,.2,1) forwards;
+      animation:jokerPop 6s cubic-bezier(.2,.8,.2,1) forwards;
     }
 
     .joker-card img{
-      width:min(48vw, 520px);
-      max-width:520px;
+      width:min(82vw, 760px);
+      max-width:760px;
       height:auto;
       object-fit:contain;
     }
@@ -587,20 +587,23 @@
     }
 
     @keyframes jokerPop{
-      0%{opacity:0; transform:scale(.6) rotate(-6deg)}
-      35%{opacity:1; transform:scale(1.04) rotate(2deg)}
-      100%{opacity:0; transform:scale(1) rotate(0deg)}
+      0%{opacity:0; transform:scale(.5) rotate(-8deg)}
+      18%{opacity:1; transform:scale(1.18) rotate(2deg)}
+      72%{opacity:1; transform:scale(1.08) rotate(0deg)}
+      100%{opacity:0; transform:scale(1.02) rotate(0deg)}
     }
 
     @keyframes jokerFade{
       0%{opacity:0}
-      20%{opacity:1}
+      12%{opacity:1}
+      78%{opacity:1}
       100%{opacity:0}
     }
 
     @keyframes jokerFlash{
       0%{opacity:0}
-      20%{opacity:1}
+      12%{opacity:1}
+      78%{opacity:1}
       100%{opacity:0}
     }
 
@@ -1116,22 +1119,34 @@
       s.play().catch(() => {});
     }
 
+    function playOneShot(audio, volume = null) {
+      if (!soundEnabled) return;
+      try {
+        const s = audio.cloneNode();
+        if (volume !== null) s.volume = volume;
+        s.preload = "auto";
+        s.play().catch(() => {});
+      } catch (_) {
+        try {
+          audio.currentTime = 0;
+          audio.play().catch(() => {});
+        } catch (_) {}
+      }
+    }
+
     function playRevealHit() {
       if (!soundEnabled) return;
-      try { sounds.whoosh.currentTime = 0; } catch (_) {}
-      sounds.whoosh.play().catch(() => {});
+      playOneShot(sounds.whoosh, 0.9);
     }
 
     function playChaosExplosion() {
       if (!soundEnabled) return;
-      try { sounds.explosion.currentTime = 0; } catch (_) {}
-      sounds.explosion.play().catch(() => {});
+      playOneShot(sounds.explosion, 0.95);
     }
 
     function playJokerLaugh() {
       if (!soundEnabled) return;
-      try { sounds.joker.currentTime = 0; } catch (_) {}
-      sounds.joker.play().catch(() => {});
+      playOneShot(sounds.joker, 0.95);
     }
 
     function triggerJokerChaosImpact() {
@@ -1156,7 +1171,7 @@
         overlay.classList.remove("show");
         document.body.classList.remove("joker-flash");
         document.body.classList.remove("chaos-shake");
-      }, 1900);
+      }, 6100);
     }
 
     function animateSwapToFinal(p1FinalGuns, p2FinalGuns) {
@@ -1778,7 +1793,7 @@
       clearCard("p2", "...");
 
       document.getElementById("revealStage").textContent = "Incoming: Dj Read";
-      await new Promise(r => setTimeout(r, 420));
+      await new Promise(r => setTimeout(r, 3000));
 
       p1Card.classList.remove("hidden-reveal");
       p1Card.classList.remove("reveal");
@@ -1797,10 +1812,10 @@
       playRevealHit();
 
       document.getElementById("revealStage").textContent = `${roll.p1.legend} locked in`;
-      await new Promise(r => setTimeout(r, 700));
+      await new Promise(r => setTimeout(r, 3000));
 
       document.getElementById("revealStage").textContent = "Incoming: Tvdb";
-      await new Promise(r => setTimeout(r, 320));
+      await new Promise(r => setTimeout(r, 420));
 
       p2Card.classList.remove("hidden-reveal");
       p2Card.classList.remove("reveal-right");
@@ -1836,6 +1851,8 @@
         if (roll.chaosMode === "swap") {
           triggerJokerChaosImpact();
         } else {
+          playChaosExplosion();
+          await new Promise(r => setTimeout(r, 180));
           triggerChaosImpact();
         }
 
@@ -1843,7 +1860,7 @@
           roll.chaosMode === "swap" ? "CHAOS: Swap Weapons" : "CHAOS: Pistols Only";
 
         if (roll.chaosMode === "swap" && roll.previewP1Guns && roll.previewP2Guns) {
-          await new Promise(r => setTimeout(r, 820));
+          await new Promise(r => setTimeout(r, 5200));
           animateSwapToFinal(roll.p1.guns, roll.p2.guns);
         }
 
