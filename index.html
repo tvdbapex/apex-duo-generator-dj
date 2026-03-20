@@ -1046,19 +1046,41 @@
     let rollingInterval = null;
 
     const sounds = {
-      bg: new Audio("assets/sounds/bg.m4a?v=9"),
-      click: new Audio("assets/sounds/click.m4a?v=9"),
-      whoosh: new Audio("assets/sounds/woosh.m4a?v=9"),
-      explosion: new Audio("assets/sounds/explosion.m4a?v=9"),
-      joker: new Audio("assets/sounds/joker.m4a?v=9")
+      bg: new Audio("assets/sounds/bg.m4a?v=10"),
+      clickA: new Audio("assets/sounds/click.m4a?v=10"),
+      clickB: new Audio("assets/sounds/click.m4a?v=10"),
+      whoosh: new Audio("assets/sounds/woosh.m4a?v=10"),
+      explosion: new Audio("assets/sounds/explosion.m4a?v=10"),
+      joker: new Audio("assets/sounds/joker.m4a?v=10")
     };
+
+    let useClickA = true;
 
     sounds.bg.loop = true;
     sounds.bg.volume = 0.2;
-    sounds.click.volume = 0.6;
+    sounds.bg.preload = "auto";
+
+    sounds.clickA.volume = 0.6;
+    sounds.clickA.preload = "auto";
+
+    sounds.clickB.volume = 0.6;
+    sounds.clickB.preload = "auto";
+
     sounds.whoosh.volume = 0.7;
+    sounds.whoosh.preload = "auto";
+
     sounds.explosion.volume = 0.9;
+    sounds.explosion.preload = "auto";
+
     sounds.joker.volume = 0.85;
+    sounds.joker.preload = "auto";
+
+    sounds.bg.load();
+    sounds.clickA.load();
+    sounds.clickB.load();
+    sounds.whoosh.load();
+    sounds.explosion.load();
+    sounds.joker.load();
 
     async function startAudioIfNeeded() {
       if (audioStarted || !soundEnabled) return;
@@ -1070,8 +1092,10 @@
 
     function playRollTick() {
       if (!soundEnabled) return;
-      sounds.click.currentTime = 0;
-      sounds.click.play().catch(() => {});
+      const s = useClickA ? sounds.clickA : sounds.clickB;
+      useClickA = !useClickA;
+      try { s.currentTime = 0; } catch (_) {}
+      s.play().catch(() => {});
     }
 
     function playRevealHit() {
