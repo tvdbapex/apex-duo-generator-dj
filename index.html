@@ -879,13 +879,15 @@
       </div>
     </div>
 
+
     <div class="meta-grid">
-      <div>
-        <div id="noticeList" class="notice-list" style="display:none;"></div>
+      
         <div class="footer-note">
           Pistol Only chaos intentionally overrides cross-player unique guns and unique classes, otherwise that chaos mode would be impossible in Apex because there are only 3 pistols.
         </div>
       </div>
+
+      <div id="noticeList" style="display:none;"></div>
 
       <div class="panel">
         <h3>Connection</h3>
@@ -1046,46 +1048,66 @@
     let rollingInterval = null;
 
     const sounds = {
-      bg: new Audio("assets/sounds/bg.m4a?v=10"),
-      clickA: new Audio("assets/sounds/click.m4a?v=10"),
-      clickB: new Audio("assets/sounds/click.m4a?v=10"),
-      whoosh: new Audio("assets/sounds/woosh.m4a?v=10"),
-      explosion: new Audio("assets/sounds/explosion.m4a?v=10"),
-      joker: new Audio("assets/sounds/joker.m4a?v=10")
+      bg: new Audio("assets/sounds/bg.m4a?v=11"),
+      clickA: new Audio("assets/sounds/click.m4a?v=11"),
+      clickB: new Audio("assets/sounds/click.m4a?v=11"),
+      whoosh: new Audio("assets/sounds/woosh.m4a?v=11"),
+      explosion: new Audio("assets/sounds/explosion.m4a?v=11"),
+      joker: new Audio("assets/sounds/joker.m4a?v=11")
     };
 
     let useClickA = true;
 
     sounds.bg.loop = true;
     sounds.bg.volume = 0.2;
-    sounds.bg.preload = "auto";
-
     sounds.clickA.volume = 0.6;
-    sounds.clickA.preload = "auto";
-
     sounds.clickB.volume = 0.6;
-    sounds.clickB.preload = "auto";
-
     sounds.whoosh.volume = 0.7;
-    sounds.whoosh.preload = "auto";
-
     sounds.explosion.volume = 0.9;
-    sounds.explosion.preload = "auto";
-
     sounds.joker.volume = 0.85;
-    sounds.joker.preload = "auto";
 
-    sounds.bg.load();
-    sounds.clickA.load();
-    sounds.clickB.load();
-    sounds.whoosh.load();
-    sounds.explosion.load();
-    sounds.joker.load();
+    Object.values(sounds).forEach((audio) => {
+      audio.preload = "auto";
+      audio.load();
+    });
+
+    async function unlockAudio(audio, keepPaused = true) {
+      const oldMuted = audio.muted;
+      const oldVolume = audio.volume;
+      try {
+        audio.muted = true;
+        audio.volume = 0;
+        const playPromise = audio.play();
+        if (playPromise && typeof playPromise.then === "function") {
+          await playPromise;
+        }
+        if (keepPaused) {
+          audio.pause();
+          try { audio.currentTime = 0; } catch (_) {}
+        }
+      } catch (_) {
+      } finally {
+        audio.muted = oldMuted;
+        audio.volume = oldVolume;
+      }
+    }
 
     async function startAudioIfNeeded() {
       if (audioStarted || !soundEnabled) return;
       audioStarted = true;
+
+      await Promise.all([
+        unlockAudio(sounds.clickA),
+        unlockAudio(sounds.clickB),
+        unlockAudio(sounds.whoosh),
+        unlockAudio(sounds.explosion),
+        unlockAudio(sounds.joker),
+        unlockAudio(sounds.bg, false)
+      ]);
+
       try {
+        sounds.bg.muted = false;
+        sounds.bg.volume = 0.2;
         await sounds.bg.play();
       } catch (_) {}
     }
@@ -1696,7 +1718,7 @@
     // =========================
     // ROLL ANIMATION / REVEAL
     // =========================
-    function startRollAnimation(mobileTarget = "p1") {
+    function startRollAnimation() {
       clearInterval(rollingInterval);
 
       const p1Card = document.getElementById("p1Card");
@@ -1726,15 +1748,6 @@
         renderWeaponRows("p2Weapons", [p2GunA, p2GunB]);
         document.getElementById("p1LegendWrap").innerHTML = `<div class="legend-fallback">${p1Legend}</div>`;
         document.getElementById("p2LegendWrap").innerHTML = `<div class="legend-fallback">${p2Legend}</div>`;
-
-        if (isMobileView()) {
-          if (mobileTarget === "p2") {
-            renderMobileRollingPreview("p2", p2Legend, [p2GunA, p2GunB]);
-          } else {
-            renderMobileRollingPreview("p1", p1Legend, [p1GunA, p1GunB]);
-          }
-        }
-
         playRollTick();
         i += 1;
       }, 100);
@@ -1748,11 +1761,6 @@
     }
 
     async function revealSequence(roll) {
-      if (isMobileView()) {
-        await revealSequenceMobile(roll);
-        return;
-      }
-
       const p1Card = document.getElementById("p1Card");
       const p2Card = document.getElementById("p2Card");
 
@@ -1887,72 +1895,6 @@
       document.getElementById("showTvdbBtn").classList.toggle("active", sideKey === "p2");
     }
 
-    function renderMobileRollingPreview(sideKey, legendName, guns) {
-      document.getElementById("mobilePlayerName").textContent = sideKey === "p1" ? "DJ READ" : "TVDB";
-      document.getElementById("mobileLegend").textContent = legendName;
-      renderWeaponRows("mobileWeapons", guns);
-      document.getElementById("mobileLegendWrap").innerHTML = `<div class="legend-fallback">${legendName}</div>`;
-      mobileActiveView = sideKey;
-      document.getElementById("showDjBtn").classList.toggle("active", sideKey === "p1");
-      document.getElementById("showTvdbBtn").classList.toggle("active", sideKey === "p2");
-    }
-
-    async function revealSequenceMobile(roll) {
-      const p1Reveal = (roll.chaosMode && roll.previewP1Guns) ? { ...roll.p1, guns: roll.previewP1Guns } : roll.p1;
-      const p2Reveal = (roll.chaosMode && roll.previewP2Guns) ? { ...roll.p2, guns: roll.previewP2Guns } : roll.p2;
-
-      document.getElementById("chaosBanner").classList.remove("show");
-      setMobileTabState(false);
-
-      if (!rollingInterval) {
-        startRollAnimation("p1");
-      }
-      document.getElementById("revealStage").textContent = "Rolling legends and loadouts...";
-      await new Promise(r => setTimeout(r, 900));
-      stopRollAnimation();
-
-      renderMobileCard("p1", p1Reveal);
-      playRevealHit();
-      document.getElementById("revealStage").textContent = `${roll.p1.legend} locked in`;
-      await new Promise(r => setTimeout(r, 3000));
-
-      startRollAnimation("p2");
-      document.getElementById("revealStage").textContent = "Rolling legends and loadouts...";
-      await new Promise(r => setTimeout(r, 900));
-      stopRollAnimation();
-
-      renderMobileCard("p2", p2Reveal);
-      playRevealHit();
-      document.getElementById("revealStage").textContent = `${roll.p2.legend} locked in`;
-      await new Promise(r => setTimeout(r, 3000));
-
-      if (roll.chaosMode) {
-        document.getElementById("chaosText").textContent =
-          roll.chaosMode === "swap" ? "Both players must swap guns" : "Pistol only";
-
-        document.getElementById("revealStage").textContent = "Wait for it...";
-        await new Promise(r => setTimeout(r, 500));
-
-        if (roll.chaosMode === "swap") {
-          triggerJokerChaosImpact();
-        } else {
-          triggerChaosImpact();
-        }
-
-        document.getElementById("revealStage").textContent =
-          roll.chaosMode === "swap" ? "CHAOS: Swap Weapons" : "CHAOS: Pistols Only";
-
-        await new Promise(r => setTimeout(r, 1000));
-        renderMobileCard("p2", roll.p2);
-        await new Promise(r => setTimeout(r, 1200));
-      } else {
-        document.getElementById("revealStage").textContent = "Loadouts ready";
-      }
-
-      setMobileTabState(true);
-      setActiveTab("p1");
-    }
-
     function showMobileView(sideKey) {
       if (!mobileTabsEnabled || !appState || !appState.currentRoll) return;
       const roll = appState.currentRoll;
@@ -1967,12 +1909,11 @@
 
       isRolling = true;
       const rollBtn = document.getElementById("rollBtn");
-      const mobileMode = isMobileView();
       rollBtn.disabled = true;
       rollBtn.textContent = "ROLLING...";
       setStatus("Rolling...");
       await startAudioIfNeeded();
-      startRollAnimation("p1");
+      startRollAnimation();
 
       try {
         const latest = await loadState();
@@ -1985,9 +1926,7 @@
         if (!ok) throw new Error("Could not save next session state.");
 
         appState = nextState;
-        if (!mobileMode) {
-          stopRollAnimation();
-        }
+        stopRollAnimation();
         render(appState, true);
         setStatus("Roll sent.");
       } catch (err) {
