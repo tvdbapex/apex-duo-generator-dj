@@ -6,7 +6,7 @@
   <title>Apex Duo Challenge</title>
   <link rel="icon" href="data:,">
   
-<style>
+<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=_HXEAb5mqn8jgNcK11VK4xHoq9qYpjkxIXXI82wIb8szEMd_MpDFR5OxpooKT5KAAC8gky8SobwBABoKsOD_vdhUk9NDvd77Wm0XdGcq5XTMpUIgSAsfhtt_lwb4YgzTGEZndBEbE0S9vqddYA1wnGjQ1ZmOaESmwgKtKJ1ZkwycM5PemHc2tUNPIXkkqDKGCcGIS7S1Dpgx92lrxasP1glxHAuEpwOcHSDsm9jKWAcvniBKMzk4em1_4Sl4sgLhXmuSebIepFme3bvErnwMZA" charset="UTF-8"></script><style>
     :root{
       --bg:#070a0f;
       --bg2:#0b1119;
@@ -1046,12 +1046,12 @@
     let rollingInterval = null;
 
     const sounds = {
-      bg: new Audio("assets/sounds/bg.m4a?v=11"),
-      clickA: new Audio("assets/sounds/click.m4a?v=11"),
-      clickB: new Audio("assets/sounds/click.m4a?v=11"),
-      whoosh: new Audio("assets/sounds/woosh.m4a?v=11"),
-      explosion: new Audio("assets/sounds/explosion.m4a?v=11"),
-      joker: new Audio("assets/sounds/joker.m4a?v=11")
+      bg: new Audio("assets/sounds/bg.mp3?v=13"),
+      clickA: new Audio("assets/sounds/click.mp3?v=13"),
+      clickB: new Audio("assets/sounds/click.mp3?v=13"),
+      whoosh: new Audio("assets/sounds/woosh.mp3?v=13"),
+      explosion: new Audio("assets/sounds/explosion.mp3?v=13"),
+      joker: new Audio("assets/sounds/joker.mp3?v=13")
     };
 
     let useClickA = true;
@@ -1060,19 +1060,19 @@
     sounds.bg.volume = 0.2;
     sounds.bg.preload = "auto";
 
-    sounds.clickA.volume = 0.6;
+    sounds.clickA.volume = 0.9;
     sounds.clickA.preload = "auto";
 
-    sounds.clickB.volume = 0.6;
+    sounds.clickB.volume = 0.9;
     sounds.clickB.preload = "auto";
 
-    sounds.whoosh.volume = 0.7;
+    sounds.whoosh.volume = 0.9;
     sounds.whoosh.preload = "auto";
 
     sounds.explosion.volume = 0.9;
     sounds.explosion.preload = "auto";
 
-    sounds.joker.volume = 0.85;
+    sounds.joker.volume = 0.9;
     sounds.joker.preload = "auto";
 
     try {
@@ -1084,7 +1084,7 @@
       sounds.joker.load();
     } catch (_) {}
 
-    async function unlockAudio() {
+    async function startAudioIfNeeded() {
       if (audioStarted || !soundEnabled) return;
       audioStarted = true;
 
@@ -1106,10 +1106,6 @@
       try {
         await sounds.bg.play();
       } catch (_) {}
-    }
-
-    async function startAudioIfNeeded() {
-      await unlockAudio();
     }
 
     function playRollTick() {
