@@ -986,6 +986,37 @@
       "Wingman":"Pistol"
     };
 
+
+    const LEGEND_CLASS = {
+      "Ash":"Skirmisher",
+      "Bangalore":"Assault",
+      "Ballistic":"Assault",
+      "Bloodhound":"Recon",
+      "Catalyst":"Controller",
+      "Caustic":"Controller",
+      "Conduit":"Support",
+      "Crypto":"Recon",
+      "Fuse":"Assault",
+      "Gibraltar":"Support",
+      "Horizon":"Skirmisher",
+      "Lifeline":"Support",
+      "Loba":"Support",
+      "Mad Maggie":"Assault",
+      "Mirage":"Support",
+      "Newcastle":"Support",
+      "Octane":"Skirmisher",
+      "Pathfinder":"Skirmisher",
+      "Rampart":"Controller",
+      "Revenant":"Assault",
+      "Seer":"Recon",
+      "Valkyrie":"Recon",
+      "Vantage":"Recon",
+      "Wattson":"Controller",
+      "Wraith":"Skirmisher",
+      "Alter":"Skirmisher",
+      "Sparrow":"Recon"
+    };
+
     const CARE_PACKAGE = [
       "C.A.R. SMG",
       "G7 Scout",
@@ -1347,6 +1378,14 @@
       return legend !== lastLegend;
     }
 
+    function getLegendClass(legend) {
+      return LEGEND_CLASS[legend] || "Unknown";
+    }
+
+    function legendsShareClass(legendA, legendB) {
+      return getLegendClass(legendA) === getLegendClass(legendB);
+    }
+
     // =========================
     // STATE LOAD / SAVE
     // =========================
@@ -1409,17 +1448,27 @@
     // RULE ENGINE
     // =========================
     function buildLegendPairs(state) {
-      const pairs = [];
+      const strictPairs = [];
+      const fallbackPairs = [];
       const legends = state.remainingLegends || [];
+
       for (const l1 of legends) {
         if (!isValidLegendForPlayer(l1, state.p1LastLegend)) continue;
+
         for (const l2 of legends) {
           if (l1 === l2) continue;
           if (!isValidLegendForPlayer(l2, state.p2LastLegend)) continue;
-          pairs.push([l1, l2]);
+
+          if (legendsShareClass(l1, l2)) {
+            fallbackPairs.push([l1, l2]);
+          } else {
+            strictPairs.push([l1, l2]);
+          }
         }
       }
-      return shuffle(pairs);
+
+      if (strictPairs.length) return shuffle(strictPairs);
+      return shuffle(fallbackPairs);
     }
 
     function hasAnyValidLegendPair(state) {
