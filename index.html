@@ -1705,6 +1705,12 @@
       renderFinalCard("p1", p1Reveal);
         const p2Reveal = (roll.chaosMode && roll.previewP2Guns) ? { ...roll.p2, guns: roll.previewP2Guns } : roll.p2;
       renderFinalCard("p2", p2Reveal);
+
+        if (isMobileView()) {
+          renderMobileCard(mobileActiveView || "p1", (mobileActiveView || "p1") === "p2" ? roll.p2 : roll.p1);
+          setMobileTabState(true);
+        }
+
         document.getElementById("revealStage").textContent = "Loadouts ready";
       }
     }
