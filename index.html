@@ -808,7 +808,6 @@
 
     <div class="secondary-row">
       <button id="togglePoolsBtn" class="pill-toggle">Show Remaining Pools</button>
-      <button id="soundToggleBtn" class="pill-toggle active">Sound On</button>
     </div>
 
     <div class="reveal-stage" id="revealStage"></div>
@@ -1092,116 +1091,34 @@
     };
 
     // =========================
-    // AUDIO
+    // AUDIO DISABLED FOR BATTERY
     // =========================
-    let soundEnabled = true;
-    let audioStarted = false;
+    let soundEnabled = false;
+    let audioStarted = true;
     let lastRenderedTimestamp = null;
     let poolsVisible = false;
     let appState = null;
     let isRolling = false;
     let rollingInterval = null;
 
-    const sounds = {
-      bg: new Audio("assets/sounds/bg.mp3?v=13"),
-      clickA: new Audio("assets/sounds/click.mp3?v=13"),
-      clickB: new Audio("assets/sounds/click.mp3?v=13"),
-      whoosh: new Audio("assets/sounds/woosh.mp3?v=13"),
-      explosion: new Audio("assets/sounds/explosion.mp3?v=13"),
-      joker: new Audio("assets/sounds/joker.mp3?v=13")
-    };
-
-    let useClickA = true;
-
-    sounds.bg.loop = true;
-    sounds.bg.volume = 0.2;
-    sounds.bg.preload = "auto";
-
-    sounds.clickA.volume = 0.9;
-    sounds.clickA.preload = "auto";
-
-    sounds.clickB.volume = 0.9;
-    sounds.clickB.preload = "auto";
-
-    sounds.whoosh.volume = 0.9;
-    sounds.whoosh.preload = "auto";
-
-    sounds.explosion.volume = 0.9;
-    sounds.explosion.preload = "auto";
-
-    sounds.joker.volume = 0.9;
-    sounds.joker.preload = "auto";
-
-    try {
-      sounds.bg.load();
-      sounds.clickA.load();
-      sounds.clickB.load();
-      sounds.whoosh.load();
-      sounds.explosion.load();
-      sounds.joker.load();
-    } catch (_) {}
-
     async function startAudioIfNeeded() {
-      if (audioStarted || !soundEnabled) return;
-      audioStarted = true;
-
-      const shortSounds = [sounds.clickA, sounds.clickB, sounds.whoosh, sounds.explosion, sounds.joker];
-      for (const s of shortSounds) {
-        try {
-          s.muted = true;
-          s.currentTime = 0;
-          const p = s.play();
-          if (p && typeof p.then === "function") {
-            await p.catch(() => {});
-          }
-          s.pause();
-          s.muted = false;
-          s.currentTime = 0;
-        } catch (_) {}
-      }
-
-      try {
-        await sounds.bg.play();
-      } catch (_) {}
+      return;
     }
 
     function playRollTick() {
-      if (!soundEnabled) return;
-      const s = useClickA ? sounds.clickA : sounds.clickB;
-      useClickA = !useClickA;
-      try { s.currentTime = 0; } catch (_) {}
-      s.play().catch(() => {});
-    }
-
-    function playOneShot(audio, volume = null) {
-      if (!soundEnabled) return;
-      try {
-        const s = new Audio(audio.src);
-        s.preload = "auto";
-        s.volume = volume !== null ? volume : audio.volume;
-        s.play().catch(() => {});
-      } catch (_) {
-        try {
-          audio.currentTime = 0;
-          if (volume !== null) audio.volume = volume;
-          audio.play().catch(() => {});
-        } catch (_) {}
-      }
+      return;
     }
 
     function playRevealHit() {
-      if (!soundEnabled) return;
-      playOneShot(sounds.whoosh, 0.9);
+      return;
     }
 
     function playChaosExplosion() {
-      if (!soundEnabled) return;
-      playOneShot(sounds.explosion, 0.95);
+      return;
     }
 
     function playJokerLaugh() {
-      if (!soundEnabled) return;
-      playOneShot(sounds.joker, 1);
+      return;
     }
 
     function triggerJokerChaosImpact() {
@@ -1219,8 +1136,6 @@
       document.body.classList.remove("chaos-shake");
       void document.body.offsetWidth;
       document.body.classList.add("chaos-shake");
-
-      playJokerLaugh();
 
       setTimeout(() => {
         overlay.classList.remove("show");
@@ -1280,8 +1195,6 @@
       chaosBanner.classList.remove("show");
       void chaosBanner.offsetWidth;
       chaosBanner.classList.add("show");
-
-      playChaosExplosion();
 
       setTimeout(() => {
         blast.classList.remove("show");
@@ -2157,6 +2070,25 @@
       setStatus("Connected.");
     }
 
+    async function refreshLatestState(reason = "refresh") {
+      if (isRolling) return;
+
+      const latest = await loadState();
+      if (!latest) return;
+
+      appState = latest;
+      lastRenderedTimestamp = latest.lastUpdated || null;
+      render(appState, false);
+
+      if (reason === "visible") {
+        setStatus("Updated after returning to app.");
+      } else if (reason === "focus") {
+        setStatus("Synced latest roll.");
+      } else {
+        setStatus("Latest state loaded.");
+      }
+    }
+
     document.getElementById("rollBtn").addEventListener("click", performRoll);
     document.getElementById("resetAllBtn").addEventListener("click", resetAll);
 
@@ -2164,23 +2096,31 @@
       setPoolVisibility(!poolsVisible);
     });
 
-    document.getElementById("soundToggleBtn").addEventListener("click", async () => {
-      soundEnabled = !soundEnabled;
-      const btn = document.getElementById("soundToggleBtn");
-      btn.classList.toggle("active", soundEnabled);
-      btn.textContent = soundEnabled ? "Sound On" : "Sound Off";
-
-      if (soundEnabled) {
-        await startAudioIfNeeded();
-        playRevealHit();
-      } else {
-        try { sounds.bg.pause(); } catch (_) {}
-      }
-    });
 
     document.getElementById("showDjBtn").addEventListener("click", () => showMobileView("p1"));
     document.getElementById("showTvdbBtn").addEventListener("click", () => showMobileView("p2"));
 
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") {
+        refreshLatestState("visible");
+      }
+    });
+
+    window.addEventListener("focus", () => {
+      refreshLatestState("focus");
+    });
+
+    window.addEventListener("pageshow", () => {
+      refreshLatestState("visible");
+    });
+
+
+
+    setInterval(() => {
+      if (document.visibilityState === "visible" && !isRolling) {
+        refreshLatestState("poll");
+      }
+    }, 30000);
 
     // =========================
     // REALTIME
@@ -2198,7 +2138,7 @@
             const isFreshReveal = appState.lastUpdated && appState.lastUpdated !== lastRenderedTimestamp;
             lastRenderedTimestamp = appState.lastUpdated || null;
 
-            render(appState, !!isFreshReveal);
+            render(appState, document.visibilityState === "visible" && !!isFreshReveal);
             setStatus("Live update received.");
           }
         }
